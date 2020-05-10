@@ -1,0 +1,17 @@
+{
+  "name": "staff",
+  "version": "1.0.0",
+  "description": "staff application",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Arsene Kobelev",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  }
+}

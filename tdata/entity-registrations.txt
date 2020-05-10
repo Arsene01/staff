@@ -1,0 +1,1 @@
+[{"entityId":"4","registrationId":"0","startDate":40544,"endDate":43616},{"entityId":"4","registrationId":"1","startDate":43617,"endDate":2958525}]
