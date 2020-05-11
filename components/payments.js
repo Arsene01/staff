@@ -43,35 +43,5 @@ const momentPayments = [
 //рапорт об установлении ежемесячной премии
 
 module.exports = class Allowance {
-  constructor(config) {
-    for (const property in config) {
-      console.log(property);
-      if (property) this[property] = config[property];
-    }
-  }
-  getCounterTerroristAllowanceData(bodyname, startDate) {
-    if (!this.specialForcesAndOGVS) return;
-    const period = this.specialForcesAndOGVS.find('body', bodyname);
-    if (period === null) return [{ size: 100, startDate, endDate: 2958465 }]; //2958465 = 31.12.9999
-
-    const periodStartDate = period[0].startDate;
-    const periodEndDate = period[0].endDate ? period[0].endDate : 2958465;
-    const allowanceData = [];
-
-    if (periodStartDate <= startDate) {
-      allowanceData.push({ size: 200, startDate, endDate: periodEndDate });
-    } else {
-      allowanceData.push(
-        { size: 100, startDate, endDate: periodStartDate - 1 },
-        { size: 200, startDate: periodStartDate, endDate: periodEndDate }
-      );
-    }
-    const lastEndDate = allowanceData[allowanceData.length - 1].endDate;
-    if (lastEndDate !== 2958465) allowanceData.push({ size: 100, startDate: lastEndDate + 1, endDate: 2958465 });
-    return allowanceData;
-  }
-  getCrewAllowanceData(personId, startDate) {
-    if (!this.technicAssignment) return;
-    
-  }
+  
 }
