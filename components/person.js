@@ -1,5 +1,5 @@
 const { toNumber, toDateString } = require('./date-transform.js');
-const { changeEnding } = require('./case-endings.js')
+const { changeEnding } = require('./cases.js')
 
 module.exports = class Person {
   constructor(dispatcher) {
