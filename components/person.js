@@ -87,7 +87,7 @@ module.exports = class Person {
     this.registerData(
       this.person,
       { start: this.person._birthdate },
-      'personData'
+      'person-data'
     );
   }
   loadPerson(person) {

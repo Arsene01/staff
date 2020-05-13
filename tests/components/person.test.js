@@ -68,8 +68,8 @@ describe("Person class testing...", () => {
     expect(p.birthdate).toEqual('11.12.1990');
   });
   test("registerPersonData method testing...", () => {
-    p.registerData(p.person, { start: p.person._birthdate }, 'personData');
-    const state = p.dispatcher.getDataSource('personData').source.state;
+    p.registerData(p.person, { start: p.person._birthdate }, 'person-data');
+    const state = p.dispatcher.getDataSource('person-data').source.state;
     expect(state[0]).toEqual({
       data: {
         _lastnameId: p.person._lastnameId,
@@ -84,11 +84,11 @@ describe("Person class testing...", () => {
     });
   });
   test("registerPerson method testing...", () => {
-    p.dispatcher.getDataSource('personData').source._state = [];
+    p.dispatcher.getDataSource('person-data').source._state = [];
     p.dispatcher.getDataSource('persons').source._state = [];
     p.registerPerson();
     const state = p.dispatcher.getDataSource('persons').source.state;
-    const pd = p.dispatcher.getDataSource('personData').source.state;
+    const pd = p.dispatcher.getDataSource('person-data').source.state;
 
     expect(pd[0]).toEqual({
       data: {
@@ -108,7 +108,7 @@ describe("Person class testing...", () => {
   test("filterInSource method testing...", () => {
     const persons = p.filterInSource(
       { data: { _id: 1, _lastnameId: 761 }},
-      'personData'
+      'person-data'
     );
     expect(persons[0]).toEqual({
       data: {
@@ -127,7 +127,7 @@ describe("Person class testing...", () => {
   test("loadPerson method testing...", () => {
     const persons = p.filterInSource(
       { data: { _id: 1, _lastnameId: 761 }},
-      'personData'
+      'person-data'
     );
     const person = persons[0].data
     p.loadPerson(person);

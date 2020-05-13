@@ -13,7 +13,7 @@ module.exports = class Dispatcher {
       'firstnames',
       'middlenames',
       'persons',
-      'personData',
+      'person-data',
       'registrations',
       'lastname-endings',
       'firstname-endings',
