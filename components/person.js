@@ -69,15 +69,15 @@ module.exports = class Person {
     this.person._middlenameId = this.findInSource({ value: m}, 'middlenames').id;
   }
   set birthdate(b) {
-    if (this.birthdateId) return;
+    if (this.birthdate) return;
     this.person._birthdate = toNumber(b);
   }
   newPerson() { this.person = {}; }
-  registerData(data, range, dataSourceName) {
+  registerData(relevant, data, range, dataSourceName) {
     if (!dataSourceName) return;
     if (!range) return;
     if (!range.end) range.end = 2958525;
-    this.dispatcher.add({ data, range }, dataSourceName);
+    this.dispatcher.add({ relevant, data, range }, dataSourceName);
   }
   registerPerson() {
     if (!this.isValid()) return;
@@ -85,7 +85,13 @@ module.exports = class Person {
     this.dispatcher.add({ id }, 'persons');
     this.person._id = id;
     this.registerData(
-      this.person,
+      { personId: id },
+      {
+        _lastnameId: this.person._lastnameId,
+        _firstnameId: this.person._firstnameId,
+        _middlenameId: this.person._middlenameId,
+        _birthdate: this.person._birthdate
+      },
       { start: this.person._birthdate },
       'person-data'
     );

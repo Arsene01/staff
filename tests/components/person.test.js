@@ -67,10 +67,21 @@ describe("Person class testing...", () => {
   test("birthdate getter testing...", () => {
     expect(p.birthdate).toEqual('11.12.1990');
   });
-  test("registerPersonData method testing...", () => {
-    p.registerData(p.person, { start: p.person._birthdate }, 'person-data');
+  test("registerData method testing...", () => {
+    p.registerData(
+      { personId: p.person.id },
+      {
+        _lastnameId: p.person._lastnameId,
+        _firstnameId: p.person._firstnameId,
+        _middlenameId: p.person._middlenameId,
+        _birthdate: p.person._birthdate
+      },
+      { start: p.person._birthdate },
+      'person-data'
+    );
     const state = p.dispatcher.getDataSource('person-data').source.state;
     expect(state[0]).toEqual({
+      relevant: { personId: p.person.id },
       data: {
         _lastnameId: p.person._lastnameId,
         _firstnameId: p.person._firstnameId,
@@ -87,12 +98,14 @@ describe("Person class testing...", () => {
     p.dispatcher.getDataSource('person-data').source._state = [];
     p.dispatcher.getDataSource('persons').source._state = [];
     p.registerPerson();
-    const state = p.dispatcher.getDataSource('persons').source.state;
-    const pd = p.dispatcher.getDataSource('person-data').source.state;
+    const state = p.dispatcher.stateOf('persons');
+    const pd = p.dispatcher.stateOf('person-data');
 
     expect(pd[0]).toEqual({
+      relevant: {
+          personId: 1,
+      },
       data: {
-        _id: 1,
         _lastnameId: p.person._lastnameId,
         _firstnameId: p.person._firstnameId,
         _middlenameId: p.person._middlenameId,
@@ -107,12 +120,15 @@ describe("Person class testing...", () => {
   });
   test("filterInSource method testing...", () => {
     const persons = p.filterInSource(
-      { data: { _id: 1, _lastnameId: 761 }},
+      {
+        relevant: { personId: 1 },
+        data: { _lastnameId: 761 }
+      },
       'person-data'
     );
     expect(persons[0]).toEqual({
+      relevant: { personId: 1 },
       data: {
-        _id: 1,
         _lastnameId: p.person._lastnameId,
         _firstnameId: p.person._firstnameId,
         _middlenameId: p.person._middlenameId,
@@ -126,7 +142,10 @@ describe("Person class testing...", () => {
   });
   test("loadPerson method testing...", () => {
     const persons = p.filterInSource(
-      { data: { _id: 1, _lastnameId: 761 }},
+      {
+        relevant: { personId: 1 },
+        data: { _lastnameId: 761 }
+      },
       'person-data'
     );
     const person = persons[0].data
