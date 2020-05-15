@@ -19,7 +19,11 @@ module.exports = class Dispatcher {
       'firstname-endings',
       'middlename-endings',
       'address-data',
-      'regions'
+      'regions',
+      'areas',
+      'cities',
+      'localities',
+      'streets'
     ].map(dataSourceName => this.createDataSource(dataSourceName));
   }
   getDataSource(name) {
