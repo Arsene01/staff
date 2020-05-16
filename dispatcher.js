@@ -37,7 +37,7 @@ module.exports = class Dispatcher {
   createDataSource(name) {
     const source = this.getDataSource(name);
     if (source) return source;
-    this.dataSources.push({ name, source: new DataSource(`e:\\projects\\staff\\tdata\\${name}.txt`) });
+    this.dataSources.push({ name, source: new DataSource(`${__dirname}\\tdata\\${name}.txt`) });
     return this.dataSources[this.dataSources.length - 1];
   }
   add(record, dataSourceName) {
