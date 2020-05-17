@@ -38,6 +38,7 @@ module.exports = class Address {
     return `д. ${this.registration.house}`;
   }
   get building() {
+    if (!this.registration) return null;
     if (!this.registration.building) return null;
     return `корп. ${this.registration.building}`;
   }

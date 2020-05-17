@@ -1,5 +1,6 @@
 node_modules
 data
 state
+coverage
 util.js
 1.txt

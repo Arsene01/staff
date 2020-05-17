@@ -4,7 +4,8 @@ function changeEnding(element, endingSource, toCase) {
   const { end, length } = getEndingObject(element);
   const match = findMatch(endingSource, end);
   if (!match) return null;
-  return element.substring(0, element.length - length) + match[getCase(toCase)];
+  const result = element.substring(0, element.length - length) + match[getCase(toCase)];
+  return result.replace(result[0], result[0].toUpperCase());
 }
 
 function getCase(newCase) {

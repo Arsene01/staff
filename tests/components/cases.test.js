@@ -28,6 +28,7 @@ describe("changeEnding method testing...", () => {
     { nominative: 'нна', dative: 'нне', accusative: 'нну', genitive: 'нны' },
     { nominative: 'лав', dative: 'лаву', accusative: 'лава', genitive: 'лава' },
     { nominative: 'тыр', dative: 'тыру', accusative: 'тыра', genitive: 'тыра' },
+    { nominative: 'ян', dative: 'яну', accusative: 'яна', genitive: 'яна' },
   ];
   test("'Арсен' argument apllied", () => {
     const element = 'Арсен';
@@ -48,6 +49,10 @@ describe("changeEnding method testing...", () => {
   test("'Арсен' argument apllied", () => {
     const element = 'Арсен';
     expect(changeEnding(element, cases, 'accusative')).toEqual('Арсена');
+  });
+  test("'Ян' argument apllied", () => {
+    const element = 'Ян';
+    expect(changeEnding(element, cases, 'accusative')).toEqual('Яна');
   });
   test("'' argument apllied", () => {
     const element = '';
