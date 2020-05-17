@@ -97,13 +97,22 @@ module.exports = class Person {
     );
   }
   loadPerson(person) {
-    this.clear();
     this.person = person;
+    if ((!this.id) || (!this.isValid())) this.clear();
   }
   filterInSource(config, dataSourceName) {
     return this.dispatcher.filterInSource(config, dataSourceName);
   }
   findInSource(config, dataSourceName) {
     return this.dispatcher.findInSource(config, dataSourceName);
+  }
+  registerAddress(address, range = { start: this.person._birthdate }) {
+    if ((!this.id) || (!this.isValid())) return;
+    this.registerData(
+      { personId: this.id },
+      address,
+      range,
+      'address-data'
+    );
   }
 }

@@ -1,4 +1,5 @@
 const Person = require('./../../components/person.js');
+const Address = require('../../components/address.js');
 const Dispatcher = require('./../../dispatcher.js');
 
 describe("Person class testing...", () => {
@@ -79,7 +80,7 @@ describe("Person class testing...", () => {
       { start: p.person._birthdate },
       'person-data'
     );
-    const state = p.dispatcher.getDataSource('person-data').source.state;
+    const state = p.dispatcher.stateOf('person-data');
     expect(state[0]).toEqual({
       relevant: { personId: p.person.id },
       data: {
@@ -141,15 +142,52 @@ describe("Person class testing...", () => {
     });
   });
   test("loadPerson method testing...", () => {
-    const persons = p.filterInSource(
+    const person = p.findInSource(
+      {
+        relevant: { personId: 1 },
+        data: { _lastnameId: 761 }
+      },
+      'person-data'
+    ).data;
+    person._id = 1;
+    p.loadPerson(person);
+    expect(p.fullname()).toEqual('Кобелев Арсен Владимирович');
+  });
+  test("registerAddress method testing...", () => {
+    const personObject = p.findInSource(
       {
         relevant: { personId: 1 },
         data: { _lastnameId: 761 }
       },
       'person-data'
     );
-    const person = persons[0].data
+    const person = { ...personObject.data, _id: personObject.relevant.personId };
     p.loadPerson(person);
-    expect(p.fullname()).toEqual('Кобелев Арсен Владимирович');
+    const a = new Address({}, p.dispatcher);
+    const address = a.registerAddress({
+      region: 'Республика Адыгея',
+      city: 'Майкоп',
+      street: 'Юннатов',
+      house: 2,
+      apartment: 64
+    });
+    p.dispatcher.getDataSource('address-data').source.state = [];
+    const r = p.registerAddress(address);
+    const state = p.dispatcher.stateOf('address-data');
+    result = {
+      relevant: { personId: 1 },
+      data: {
+        regionId: 4,
+        cityId: 218,
+        streetId: 152721,
+        house: 2,
+        apartment: 64
+      },
+      range: {
+        start: p.person._birthdate,
+        end: 2958525
+      }
+    };
+    expect(state[0]).toEqual(result);
   });
 });
