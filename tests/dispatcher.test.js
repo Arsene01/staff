@@ -11,7 +11,7 @@ describe("Dispatcher class testing...", () => {
     const name = 'my-source';
     expect(dispatcher.createDataSource(name)).toEqual({
       name, source: {
-        path: `e:\\projects\\staff\\tdata\\${name}.txt`,
+        path: `E:\\projects\\staff\\tdata\\${name}.txt`,
         _state: []
       }
     });
@@ -20,7 +20,7 @@ describe("Dispatcher class testing...", () => {
     const name = 'my-source';
     expect(dispatcher.getDataSource(name)).toEqual({
       name, source: {
-        path: `e:\\projects\\staff\\tdata\\${name}.txt`,
+        path: `E:\\projects\\staff\\tdata\\${name}.txt`,
         _state: []
       }
     });
