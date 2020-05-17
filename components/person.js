@@ -106,13 +106,28 @@ module.exports = class Person {
   findInSource(config, dataSourceName) {
     return this.dispatcher.findInSource(config, dataSourceName);
   }
+  toPerson(personDataObject) {
+    return { ...personDataObject.data, _id: personDataObject.relevant.personId };
+  }
   registerAddress(address, range = { start: this.person._birthdate }) {
     if ((!this.id) || (!this.isValid())) return;
     this.registerData(
       { personId: this.id },
-      address,
+      { ...address },
       range,
       'address-data'
+    );
+  }
+  addServicePeriod(service, range) {
+    if (!range.start) return;
+    if (!range.end) range.end = 2958525;
+    if (!service.typeId) return;
+    if (!service.exemptionMultiplyer) service.exemptionMultiplyer = 1;
+    this.registerData(
+      { personId: this.id },
+      { ...service },
+      { ...range },
+      'service'
     );
   }
 }

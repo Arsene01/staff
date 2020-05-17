@@ -1,6 +1,7 @@
 const Person = require('./../../components/person.js');
 const Address = require('../../components/address.js');
 const Dispatcher = require('./../../dispatcher.js');
+const { toNumber } = require('../../components/date-transform.js')
 
 describe("Person class testing...", () => {
   const p = new Person(new Dispatcher());
@@ -154,14 +155,15 @@ describe("Person class testing...", () => {
     expect(p.fullname()).toEqual('Кобелев Арсен Владимирович');
   });
   test("registerAddress method testing...", () => {
-    const personObject = p.findInSource(
-      {
-        relevant: { personId: 1 },
-        data: { _lastnameId: 761 }
-      },
-      'person-data'
+    const person = p.toPerson(
+      p.findInSource(
+        {
+          relevant: { personId: 1 },
+          data: { _lastnameId: 761 }
+        },
+        'person-data'
+      )
     );
-    const person = { ...personObject.data, _id: personObject.relevant.personId };
     p.loadPerson(person);
     const a = new Address({}, p.dispatcher);
     const address = a.registerAddress({
@@ -185,6 +187,38 @@ describe("Person class testing...", () => {
       },
       range: {
         start: p.person._birthdate,
+        end: 2958525
+      }
+    };
+    expect(state[0]).toEqual(result);
+  });
+  test("addServicePeriod method testing...", () => {
+    const person = p.toPerson(
+      p.findInSource(
+        {
+          relevant: { personId: 1 },
+          data: { _lastnameId: 761 }
+        },
+        'person-data'
+      )
+    );
+    p.loadPerson(person);
+    const data = {
+      typeId: 1,
+      exemptionMultiplyer: 1.5,
+      organizationId: 1
+    };
+    p.addServicePeriod(data, { start: toNumber('26.12.2016')});
+    const state = p.dispatcher.stateOf('service');
+    result = {
+      relevant: { personId: 1 },
+      data: {
+        typeId: 1,
+        exemptionMultiplyer: 1.5,
+        organizationId: 1
+      },
+      range: {
+        start: 42730,
         end: 2958525
       }
     };

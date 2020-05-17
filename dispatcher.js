@@ -23,7 +23,9 @@ module.exports = class Dispatcher {
       'areas',
       'cities',
       'localities',
-      'streets'
+      'streets',
+      'department-service-types',
+      'service'
     ].map(dataSourceName => this.createDataSource(dataSourceName));
   }
   getDataSource(name) {
