@@ -7,51 +7,51 @@ module.exports = class Address {
     return this
       .dispatcher
       .stateOf('regions')
-      .find((r) => r.id === registration.regionId);
+      .find((r) => r.id === this.registration.regionId);
   }
   get area() {
     return this
       .dispatcher
       .stateOf('areas')
-      .find((a) => a.id === registration.areaId);
+      .find((a) => a.id === this.registration.areaId);
   }
   get city() {
     return this
       .dispatcher
       .stateOf('cities')
-      .find((c) => c.id === registration.cityId);
+      .find((c) => c.id === this.registration.cityId);
   }
   get locality() {
     return this
       .dispatcher
       .stateOf('localities')
-      .find((l) => l.id === registration.localityId);
+      .find((l) => l.id === this.registration.localityId);
   }
   get street() {
     return this
       .dispatcher
       .stateOf('streets')
-      .find((s) => s.id === registration.streetId);
+      .find((s) => s.id === this.registration.streetId);
   }
   get house() {
     if (!this.registration.house) return null;
-    return this.registration.house;
+    return `д. ${this.registration.house}`;
   }
   get building() {
     if (!this.registration.building) return null;
-    return this.registration.building;
+    return `корп. ${this.registration.building}`;
   }
   get apartment() {
     if (!this.registration.apartment) return null;
-    return this.registration.apartment;
+    return `кв. ${this.registration.apartment}`;
   }
   get address() {
     return [
-      this.region,
-      this.area,
-      this.city,
-      this.locality,
-      this.street,
+      this.region ? this.region.name : null,
+      this.area ? this.area.name : null,
+      this.city ? this.city.name : null,
+      this.locality ? this.locality.name : null,
+      this.street ? this.street.name : null,
       this.house,
       this.building,
       this.apartment
@@ -89,6 +89,6 @@ module.exports = class Address {
     if (house) result.house = house;
     if (building) result.building = building;
     if (apartment) result.apartment = apartment;
-    return result;    
+    return result;
   }
 }

@@ -2,8 +2,8 @@ const Address = require('../../components/address.js');
 const Dispatcher = require('../../dispatcher.js');
 
 describe("Address class testing...", () => {
-  const address = new Address(new Dispatcher());
   test("registerAddress method testing", () => {
+    const address = new Address({}, new Dispatcher());
     const result = address.registerAddress(
       {
         region: 'Республика Адыгея',
@@ -12,49 +12,56 @@ describe("Address class testing...", () => {
         house: 2,
         apartment: 64
       }
-      { regionId: 4, rest: 'г. Майкоп, ул. Юннатов, д. 2, кв. 64' },
-      dispatcher
     );
     expect(result).toEqual({
       regionId: 4,
-      cityId: 'Майкоп',
+      cityId: 218,
+      streetId: 152721,
+      house: 2,
+      apartment: 64
     });
   });
-  /*
-  test("getAddress method testing", () => {
-    const result = Address.getAddress(
-      { regionId: 4, rest: 'г. Майкоп, ул. Юннатов, д. 2, кв. 64' },
-      dispatcher
-    );
-    expect(result).toEqual('Республика Адыгея, г. Майкоп, ул. Юннатов, д. 2, кв. 64');
-  });
-
-  test("getAddress method testing", () => {
-    const result = Address.getAddress(
-      { regionId: 1, rest: 'ул. Садовая, д. 3' },
-      dispatcher
-    );
-    expect(result).toEqual('Москва, ул. Садовая, д. 3');
-  });
   test("registerAddress method testing", () => {
-    const result = Address.registerAddress(
-      'Республика Адыгея, г. Майкоп, ул. Юннатов, д. 2, кв. 64',
-      dispatcher
+    const address = new Address({}, new Dispatcher());
+    const result = address.registerAddress(
+      {
+        region: 'Чеченская Республика',
+        area: 'Наурский район',
+        locality: 'Калиновская',
+        street: 'Маяковского',
+        house: 9
+      }
     );
-    expect(result).toEqual({ regionId: 4, rest: 'г. Майкоп, ул. Юннатов, д. 2, кв. 64' });
+    expect(result).toEqual({
+      regionId: 24,
+      areaId: 391,
+      localityId: 8519,
+      streetId: 83889,
+      house: 9
+    });
   });
-  test("registerAddress method testing", () => {
-    const result = Address.registerAddress(
-      'Москва, ул. Садовая, д. 3',
-      dispatcher
-    );
-    expect(result).toEqual({ regionId: 1, rest: 'ул. Садовая, д. 3' });
+  test("address getter testing", () => {
+    const address = new Address({
+      regionId: 4,
+      cityId: 218,
+      streetId: 152721,
+      house: 2,
+      apartment: 64
+    }, new Dispatcher());
+    const result = address.address;
+    expect(result).toEqual('Республика Адыгея, Майкоп, Юннатов, д. 2, кв. 64');
   });
-  test("registerAddress method testing", () => {
-    const result = Address.registerAddress(
-      'г. Майкоп, ул. Юннатов, д. 2, кв. 64',
-      dispatcher
+  test("address getter testing", () => {
+    const address = new Address({
+      regionId: 24,
+      areaId: 391,
+      localityId: 8519,
+      streetId: 83889,
+      house: 9
+    }, new Dispatcher());
+    const result = address.address;
+    expect(result).toEqual(
+      'Чеченская Республика, Наурский район, Калиновская, Маяковского, д. 9'
     );
-    expect(result).toEqual(null);
-  });*/
+  });
 });
