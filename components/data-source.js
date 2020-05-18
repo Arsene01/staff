@@ -14,7 +14,9 @@ module.exports = class DataSource {
     fs.writeFileSync(this.path, JSON.stringify(this.state), 'utf8');
   }
   add(record) {
-    if (typeof record === 'object') this.state.push(record);
+    if (typeof record !== 'object') return;
+    this.fixRanges(record);
+    this.state.push(record);
   }
   filter(config) {
     return this.state.filter(record => {
