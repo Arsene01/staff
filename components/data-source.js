@@ -32,7 +32,20 @@ module.exports = class DataSource {
       return deepEqual(record, config);
     });
   }
+  fixRanges(record) {
+    if (!record.relevant) return;
+    const entries = this.state.filter((element) => deepEqual(element.relevant, record.relevant));
+    if (!entries.length) return;
+    for (const e of entries) {
+      if (e.range.start >= record.range.start) {
+        if (e.range.end <= record.range.end) e.relevant = {};
+        else if (e.range.start <= record.range.end) e.range.start = record.range.end + 1;
+      }
+      else if (e.range.end >= record.range.start) e.range.end = record.range.start - 1;
+    }
+  }
 }
+
 function deepEqual(element1, element2) {
   for (const property in element2) {
     if (
