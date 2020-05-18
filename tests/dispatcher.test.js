@@ -1,5 +1,6 @@
 const DataSource = require('./../components/data-source.js');
 const Dispatcher = require('./../dispatcher.js');
+const projectPath = require('path').join(__dirname, '../');
 
 describe("Dispatcher class testing...", () => {
   const dispatcher = new Dispatcher();
@@ -11,7 +12,7 @@ describe("Dispatcher class testing...", () => {
     const name = 'my-source';
     expect(dispatcher.createDataSource(name)).toEqual({
       name, source: {
-        path: `E:\\projects\\staff\\tdata\\${name}.txt`,
+        path: `${projectPath}tdata\\${name}.txt`,
         _state: []
       }
     });
@@ -20,7 +21,7 @@ describe("Dispatcher class testing...", () => {
     const name = 'my-source';
     expect(dispatcher.getDataSource(name)).toEqual({
       name, source: {
-        path: `E:\\projects\\staff\\tdata\\${name}.txt`,
+        path: `${projectPath}tdata\\${name}.txt`,
         _state: []
       }
     });
