@@ -1,28 +1,18 @@
-class RangeController {
-  constructor(rangeEnumeration) {
-    this.rangeEnumeration = rangeEnumeration;
+module.exports = class RangeController {
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
   }
 
   getRange(rangeId, inCase) {
-    return this.rangeEnumeration[
-      rangeId
-    ][
-      [ 'nominative', 'concise', 'dative', 'genitive'].includes(inCase) ? inCase : 'nominative'
-    ];
+    const result = this.dispatcher.stateOf('ranges')
+        .find((r) => r.id === rangeId);
+    return result ? result[
+      [ 'nominative', 'accusative', 'dative', 'genitive'].includes(inCase) ? inCase : 'nominative'
+    ] : null;
   }
-  getRangeInConciseCase(rangeId) {
-    const index = this.getRangeIndexById(rangeId);
-    return index === null ? null : this.rangeEnumeration[index].concise;
-  }
-  getRangeInDativeCase(rangeId) {
-    const index = this.getRangeIndexById(rangeId);
-    return index === null ? null : this.rangeEnumeration[index].dative;
-  }
-  getRangeInGenitiveCase(rangeId) {
-    const index = this.getRangeIndexById(rangeId);
-    return index === null ? null : this.rangeEnumeration[index].genitive;
+  rangeIdOf(nominativeRange) {
+    const result = this.dispatcher.stateOf('ranges')
+        .find((r) => r.nominative === nominativeRange);
+    return result ? result.id : null;
   }
 }
-
-const createRangeController = ranges => new RangeController(ranges);
-exports.createRangeController = createRangeController;
