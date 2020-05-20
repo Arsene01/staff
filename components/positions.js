@@ -1,4 +1,45 @@
+const { getCases } = require('./cases.js');
+
 class Position {
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
+  }
+  getPositionData(positionId) {
+    return this.dispatcher.stateOf('positions').find((p) => p.id === positionId);
+  }
+  getPosition(positionId, inCase) {
+    const data = this.getPositionData(positionId);
+    return (!data) ? null : (
+      this
+        .dispatcher
+        .stateOf('position-names')
+        .find((p) => p.id === data.positionNameId)[getCases(inCase)]
+    );
+  }
+  getVusNumber(positionId) {
+    const data = this.getPositionData(positionId);
+    return (!data) ? null : (
+      this
+        .dispatcher
+        .stateOf('vus-numbers')
+        .find((el) => el.id === data.vusNumberId)
+        .name
+    );
+  }
+  getTariffCategory(positionId) {
+    const data = this.getPositionData(positionId);
+    return (!data) ? null : data.tariffCategory;
+  }
+  getStatePositionCategory(positionId) {
+    const data = this.getPositionData(positionId);
+    return (!data) ? null : (
+      this
+        .dispatcher
+        .stateOf('ranges')
+        .find((r) => r.id === data.rangeId)[getCases()]
+    );
+  }
+
   constructor(id, positionNameId, vusNumberId, tariffCategory, statePositionCategoryId) {
     this.id = id;
     this.positionNameId = positionNameId;
