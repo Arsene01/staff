@@ -30,7 +30,8 @@ module.exports = class Dispatcher {
       'position-names',
       'vus-numbers',
       'position-data',
-      'department-names'
+      'department-names',
+      'departments'
     ].map(dataSourceName => this.createDataSource(dataSourceName));
   }
   getDataSource(name) {

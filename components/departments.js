@@ -1,26 +1,30 @@
-class DepartmentInfo {
-  constructor(id, nominativeName, genitiveName, dativeName) {
-    this.id = this.id;
-    this.nominativeName = nominativeName;
-    this.genitiveName = genitiveName;
-    this.dativeName = dativeName;
-  }
-  getId() { return this.id; }
-  getNominativeName() { return this.nominativeName; }
-  getGenitiveName() { return this.genitiveName; }
-  getDativeName() { return this.dativeName; }
-}
+const { getCase } = require('./cases.js');
 
-class Department {
-  constructor(id, departmentInfoId) {
-    this.id = id;
-    this.departmentInfoId = departmentInfoId;
-    this.positions = [];
-    this.departments = [];
+module.exports = class Department {
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
   }
-  setNumber(number) { this.number = this.number ? this.number: number; }
-  addPosition(positionId) {
-    this.positions.push(positionId);
+  getDepartmentName(departmentNameId, inCase) {
+    const result = this
+      .dispatcher
+      .findInSource({ id: departmentNameId }, 'department-names');
+    return result ? result[getCase(inCase)] : null;
+  }
+
+  addDepartmentToState({
+    departmentNameId,
+    number,
+    item,
+    superDepartmantId,
+    start
+  }) {
+    if (!start) return;
+    const relevant = { departmentId: superDepartmantId ? superDepartmantId : null };
+    const data = { departmentNameId, id: this.dispatcher.stateOf('departments').length + 1 };
+    data.item = item ? item : (this.dispatcher.filterInSource(relevant, 'departments').length + 1);
+    if (number) data.number = number;
+    this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } });
+    //return this.dispatcher.findInSource({ data }, 'departments');
   }
   addDepartment(departmentId) {
     this.departments.push(departmentId);
@@ -72,7 +76,7 @@ class DepartmentController {
   }
   addPositionToDepartment(positionId, department) {
     department.addPosition(positionId);
-  }  
+  }
 }
 
 const createDepartmentController = departmentInfos => {

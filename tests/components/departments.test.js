@@ -1,14 +1,62 @@
-const Departments = require('../../components/departments.js');
+const Department = require('../../components/departments.js');
+const Dispatcher = require('../../dispatcher.js');
 
-const departmentInfos = [
-        { nominative: "мотострелковое отделение", genitive: "мотострелкового отделения", dative: "мотострелковому отделению" },
-        { nominative: "мотострелковый взвод", genitive: "мотострелкового взвода", dative:"мотострелковому взводу" },
-        { nominative: "мотострелковая рота", genitive: "мотострелковой роты", dative: "мотострелковой роте" },
-        { nominative: "мотострелковый батальон", genitive: "мотострелкового батальона", dative: "мотострелковому батальону" }
-      ],
-      dc = Departments.createDepartmentController(departmentInfos);
+const D = new Department(new Dispatcher());
 
 describe("Departments module testing...\n", () => {
+  describe("getDepartmentName method testing...", () => {
+    test("...when input is not valid", () => {
+      expect(D.getDepartmentName(0)).toEqual(null);
+    });
+    test("...when input is 59", () => {
+      expect(D.getDepartmentName(59)).toEqual('мотострелковая рота');
+    });
+    test("...when input is 62", () => {
+      expect(D.getDepartmentName(62)).toEqual('мотострелковый батальон');
+    });
+    test("...when input is 62", () => {
+      expect(D.getDepartmentName(62, 'nominative')).toEqual('мотострелковый батальон');
+    });
+    test("...when input is 62", () => {
+      expect(D.getDepartmentName(62, 'dative')).toEqual('мотострелковому батальону');
+    });
+    test("...when input is 62", () => {
+      expect(D.getDepartmentName(62, 'genitive')).toEqual('мотострелкового батальона');
+    });
+  });
+
+  describe("addDepartmentToState method testing...", () => {
+    const d1 = { departmenNametId: 62, number: 1, start: 10 }
+    test("...when departments source is empty", () => {
+      expect(D.dispatcher.stateOf('departments')).toEqual([{
+        relevant: { departmentId: null },
+        data: { id: 1, item: 1, number: 1, departmentNameId: 62 },
+        range: { start: 10, end: 2958525 }
+      }])/*
+      expect(D.addDepartmentToState(d1)).toEqual({
+        relevant: { departmentId: null },
+        data: { id: 1, item: 1, number: 1, departmentNameId: 62 },
+        range: { start: 10, end: 2958525 }
+      });*/
+    });/*
+    test("...when input is 59", () => {
+      expect(D.addDepartmentToState(59)).toEqual('мотострелковая рота');
+    });
+    test("...when input is 62", () => {
+      expect(D.addDepartmentToState(62)).toEqual('мотострелковый батальон');
+    });
+    test("...when input is 62", () => {
+      expect(D.addDepartmentToState(62, 'nominative')).toEqual('мотострелковый батальон');
+    });
+    test("...when input is 62", () => {
+      expect(D.addDepartmentToState(62, 'dative')).toEqual('мотострелковому батальону');
+    });
+    test("...when input is 62", () => {
+      expect(D.addDepartmentToState(62, 'genitive')).toEqual('мотострелкового батальона');
+    });*/
+  });
+
+/*
   test("DepartmentController initialization testing", () => {
     expect(dc.departments).toEqual([]);
   });
@@ -78,5 +126,5 @@ describe("Departments module testing...\n", () => {
   test("", () => {});
   test("", () => {});
   test("", () => {});
-  test("", () => {});
+  test("", () => {});*/
 });
