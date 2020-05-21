@@ -25,35 +25,92 @@ describe("Departments module testing...\n", () => {
     });
   });
 
-  describe("addDepartmentToState method testing...", () => {
-    const d1 = { departmenNametId: 62, number: 1, start: 10 }
-    test("...when departments source is empty", () => {
-      expect(D.dispatcher.stateOf('departments')).toEqual([{
+  describe("addPositionToState method testing...", () => {
+    const p1 = { positionDataId: 10, number: 1, start: 10 };
+    test("...when position source is empty", () => {
+      expect(D.addPositionToState({...p1})).toEqual({
         relevant: { departmentId: null },
-        data: { id: 1, item: 1, number: 1, departmentNameId: 62 },
+        data: { id: 1, item: 1, positionDataId: 10 },
         range: { start: 10, end: 2958525 }
-      }])/*
+      });
+    });
+    test("...when such position object has already added", () => {
+      expect(D.addPositionToState({...p1})).toEqual({
+        relevant: { departmentId: null },
+        data: { id: 2, item: 2, positionDataId: 10 },
+        range: { start: 10, end: 2958525 }
+      });
+    });
+    test("...when two such position objects has already added", () => {
+      expect(D.addPositionToState({...p1})).toEqual({
+        relevant: { departmentId: null },
+        data: { id: 3, item: 3, positionDataId: 10 },
+        range: { start: 10, end: 2958525 }
+      });
+    });
+  });
+
+  describe("addDepartmentToState method testing...", () => {
+    const d1 = { departmentNameId: 62, number: 1, start: 10 }
+    test("...when departments source is empty", () => {
       expect(D.addDepartmentToState(d1)).toEqual({
         relevant: { departmentId: null },
-        data: { id: 1, item: 1, number: 1, departmentNameId: 62 },
+        data: { id: 1, item: 4, number: 1, departmentNameId: 62 },
         range: { start: 10, end: 2958525 }
-      });*/
-    });/*
-    test("...when input is 59", () => {
-      expect(D.addDepartmentToState(59)).toEqual('мотострелковая рота');
+      });
     });
-    test("...when input is 62", () => {
-      expect(D.addDepartmentToState(62)).toEqual('мотострелковый батальон');
+    test("...when such department object has already added", () => {
+      expect(D.addDepartmentToState(d1)).toEqual({
+        relevant: { departmentId: null },
+        data: { id: 2, item: 5, number: 1, departmentNameId: 62 },
+        range: { start: 10, end: 2958525 }
+      });
     });
-    test("...when input is 62", () => {
-      expect(D.addDepartmentToState(62, 'nominative')).toEqual('мотострелковый батальон');
+    test("...when two such department objects has already added", () => {
+      expect(D.addDepartmentToState(d1)).toEqual({
+        relevant: { departmentId: null },
+        data: { id: 3, item: 6, number: 1, departmentNameId: 62 },
+        range: { start: 10, end: 2958525 }
+      });
     });
-    test("...when input is 62", () => {
-      expect(D.addDepartmentToState(62, 'dative')).toEqual('мотострелковому батальону');
+  });
+
+  describe("getStateElementsOf method testing...", () => {
+    test("...when three position objects and three dipartment objects has been added", () => {
+      const result = [
+        {
+          relevant: { departmentId: null },
+          data: { id: 1, item: 1, positionDataId: 10 },
+          range: { start: 10, end: 2958525 }
+        },
+        {
+          relevant: { departmentId: null },
+          data: { id: 2, item: 2, positionDataId: 10 },
+          range: { start: 10, end: 2958525 }
+        },
+        {
+          relevant: { departmentId: null },
+          data: { id: 3, item: 3, positionDataId: 10 },
+          range: { start: 10, end: 2958525 }
+        },
+        {
+          relevant: { departmentId: null },
+          data: { id: 1, item: 4, number: 1, departmentNameId: 62 },
+          range: { start: 10, end: 2958525 }
+        },
+        {
+          relevant: { departmentId: null },
+          data: { id: 2, item: 5, number: 1, departmentNameId: 62 },
+          range: { start: 10, end: 2958525 }
+        },
+        {
+          relevant: { departmentId: null },
+          data: { id: 3, item: 6, number: 1, departmentNameId: 62 },
+          range: { start: 10, end: 2958525 }
+        }
+      ];
+      expect(D.dispatcher.stateOf('positions')).toEqual([]);
     });
-    test("...when input is 62", () => {
-      expect(D.addDepartmentToState(62, 'genitive')).toEqual('мотострелкового батальона');
-    });*/
   });
 
 /*

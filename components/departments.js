@@ -14,18 +14,44 @@ module.exports = class Department {
   addDepartmentToState({
     departmentNameId,
     number,
-    item,
-    superDepartmantId,
+    superDepartmentId,
     start
   }) {
     if (!start) return;
-    const relevant = { departmentId: superDepartmantId ? superDepartmantId : null };
+    const relevant = { departmentId: superDepartmentId ? superDepartmentId : null };
     const data = { departmentNameId, id: this.dispatcher.stateOf('departments').length + 1 };
-    data.item = item ? item : (this.dispatcher.filterInSource(relevant, 'departments').length + 1);
+    data.item = this.calculateItemFor(superDepartmentId);
     if (number) data.number = number;
-    this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } });
-    //return this.dispatcher.findInSource({ data }, 'departments');
+    this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } }, 'departments');
+    return this.dispatcher.findInSource({ data }, 'departments');
   }
+  addPositionToState({
+    positionDataId,
+    superDepartmentId,
+    start
+  }) {
+    if (!start) return;
+    const relevant = { departmentId: null };
+    const data = { positionDataId, id: this.dispatcher.stateOf('positions').length + 1 };
+    data.item = this.calculateItemFor(relevant.departmentId);
+    this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } }, 'positions');
+    return this.dispatcher.findInSource({ data }, 'positions');
+  }
+
+  getStateElementsOf(departmentId) {
+    const result = [];
+    this.dispatcher.filterInSource({ relevant: { departmentId }}, 'positions')
+      .map((e) => result.push(e));
+    this.dispatcher.filterInSource({ relevant: { departmentId }}, 'departments')
+      .map((e) => result.push(e));
+    return result;
+  }
+  calculateItemFor(departmentId = null) {
+    const result = [...this.getStateElementsOf(departmentId)];
+    return result.length ? result[result.length - 1].data.item + 1 : 1;
+  }
+
+
   addDepartment(departmentId) {
     this.departments.push(departmentId);
   }
