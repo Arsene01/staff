@@ -24,11 +24,12 @@ module.exports = class Dispatcher {
       'cities',
       'localities',
       'streets',
-      'department-service-types',
       'service',
+      'department-service-types',
       'ranges',
       'position-names',
       'vus-numbers',
+      'position-data',
       'department-names'
     ].map(dataSourceName => this.createDataSource(dataSourceName));
   }

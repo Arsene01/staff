@@ -1,96 +1,80 @@
-const { getCases } = require('./cases.js');
+const { getCase } = require('./cases.js');
 
-class Position {
+module.exports = class Position {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
   }
-  getPositionData(positionId) {
-    return this.dispatcher.stateOf('positions').find((p) => p.id === positionId);
+  getPositionData(positionDataId) {
+    return this.dispatcher.stateOf('position-data').find((p) => p.id === positionDataId);
   }
-  getPosition(positionId, inCase) {
-    const data = this.getPositionData(positionId);
-    return (!data) ? null : (
+  getPosition(positionDataId, inCase) {
+    const data = this.getPositionData(positionDataId);
+    return !data ? null : (
       this
         .dispatcher
-        .stateOf('position-names')
-        .find((p) => p.id === data.positionNameId)[getCases(inCase)]
+        .findInSource({ id: data.positionNameId }, 'position-names')[getCase(inCase)]
     );
   }
-  getVusNumber(positionId) {
-    const data = this.getPositionData(positionId);
+  getPositionNameId(positionName) {
+    const result = this
+      .dispatcher
+      .findInSource({ nominative: positionName }, 'position-names');
+    return result ? result.id : null;
+  }
+  getVusNumber(positionDataId) {
+    const data = this.getPositionData(positionDataId);
     return (!data) ? null : (
       this
         .dispatcher
-        .stateOf('vus-numbers')
-        .find((el) => el.id === data.vusNumberId)
+        .findInSource({ id: data.vusNumberId }, 'vus-numbers')
         .name
     );
   }
-  getTariffCategory(positionId) {
-    const data = this.getPositionData(positionId);
+  getVusNumberId(vusNumber) {
+    const result = this
+      .dispatcher
+      .findInSource({ name: vusNumber }, 'vus-numbers');
+    return result ? result.id : null;
+  }
+  getTariffCategory(positionDataId) {
+    const data = this.getPositionData(positionDataId);
     return (!data) ? null : data.tariffCategory;
   }
-  getStatePositionCategory(positionId) {
-    const data = this.getPositionData(positionId);
+  getStatePositionCategory(positionDataId) {
+    const data = this.getPositionData(positionDataId);
     return (!data) ? null : (
       this
         .dispatcher
-        .stateOf('ranges')
-        .find((r) => r.id === data.rangeId)[getCases()]
+        .findInSource({ id: data.rangeId }, 'ranges')[getCase()]
     );
   }
+  isValid(positionData) {
+    if (!positionData) return false;
+    if (!positionData.positionNameId) return false;
+    if (!positionData.vusNumberId) return false;
+    if (!positionData.rangeId) return false;
+    if (!positionData.tariffCategory) return false;
+    return true;
+  }
+  findPositionData(positionData) {
+    if (!this.isValid(positionData)) return;
+    return this.dispatcher.findInSource(positionData, 'position-data');
+  }
+  addPositionData(positionData) {
+    if (!this.isValid(positionData)) return;
+    const pd = this.findPositionData(positionData);
+    if (pd) return pd;
+    const id = this.dispatcher.stateOf('position-data').length + 1;
+    this.dispatcher.add({ ...positionData, id }, 'position-data');
+    return this.findPositionData(positionData);
+  }
 
-  constructor(id, positionNameId, vusNumberId, tariffCategory, statePositionCategoryId) {
-    this.id = id;
-    this.positionNameId = positionNameId;
-    this.vusNumberId = vusNumberId;
-    this.tariffCategory = tariffCategory;
-    this.statePositionCategoryId = statePositionCategoryId;
-  }
-  getId() { return this.id; }
-  getPositionNameId() { return this.positionNameId; }
-  getVusNumberId() { return this.vusNumberId; }
-  getTariffCategory() { return this.tariffCategory; }
-  getStatePositionCategoryId() { return this.statePositionCategoryId; }
-  getDepartmentId() { this.departmentId === undefined ? null : this.departmentId; }
-}
-
-class PositionController {
-  constructor(positionNameEnumeration, vusNumberEnumeration) {
-    this.positionNameEnumeration = positionNameEnumeration;
-    this.vusNumberEnumeration = vusNumberEnumeration;
-    this.positions = [];
-  }
-  createPosition(positionNameId, vusNumberId, tariffCategory, statePositionCategoryId) {
-    const position = new Position(
-      this.positions.length,
-      positionNameId,
-      vusNumberId,
-      tariffCategory,
-      statePositionCategoryId
-    );
-    this.positions.push(position);
-  }
-  getPositionById(positionId) { return this.positions[positionId]; }
-  getPositionName(position, inCase) {
-    return this.positionNameEnumeration[
-      position.getPositionNameId()
-    ][
-      ['nominative', 'dative', 'genitive'].includes(inCase) ? inCase : 'nominative'
-    ];
-  }
-  getVusNumber(position) { return this.vusNumberEnumeration[position.getVusNumberId()]; }
-
-  //this.method is not covered with tests
-  //the way how this method will be used is not defined
-  getStatePositionCategory(position) {
-    if (this.mediator) return this.mediator.rangeController.getRange(
-      position.getStatePositionCategoryId()
-    )['nominative'];
-    return null;
+  //Maybe this function is more relevant for departments
+  insertPositionToState(departmentId, positionId, start) {
+    return {
+      relevant: { departmentId },
+      data: { item, positionId, number },
+      range: { start }
+    }
   }
 }
-const createPositionController = (positionNameEnumeration, vusNumberEnumeration) => {
-  return new PositionController(positionNameEnumeration, vusNumberEnumeration);
-}
-exports.createPositionController = createPositionController;
