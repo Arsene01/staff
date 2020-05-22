@@ -49,9 +49,9 @@ module.exports = class Dispatcher {
     this.dataSources.push({ name, source: new DataSource(`${__dirname}\\tdata\\${name}.txt`) });
     return this.dataSources[this.dataSources.length - 1];
   }
-  add(record, dataSourceName) {
+  add(record, dataSourceName, isSwallow) {
     if(!this.getDataSource(dataSourceName)) return;
-    this.getDataSource(dataSourceName).source.add(record);
+    this.getDataSource(dataSourceName).source.add(record, isSwallow);
   }
   filterInSource(config, dataSourceName) {
     return this.getDataSource(dataSourceName).source.filter(config);

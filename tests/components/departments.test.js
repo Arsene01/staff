@@ -2,6 +2,8 @@ const Department = require('../../components/departments.js');
 const Dispatcher = require('../../dispatcher.js');
 
 const D = new Department(new Dispatcher());
+const d1 = { departmentNameId: 62, number: 1, start: 10 };
+const p1 = { positionDataId: 10, number: 1, start: 10 };
 
 describe("Departments module testing...\n", () => {
   describe("getDepartmentName method testing...", () => {
@@ -26,23 +28,22 @@ describe("Departments module testing...\n", () => {
   });
 
   describe("addPositionToState method testing...", () => {
-    const p1 = { positionDataId: 10, number: 1, start: 10 };
     test("...when position source is empty", () => {
-      expect(D.addPositionToState({...p1})).toEqual({
+      expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 1, item: 1, positionDataId: 10 },
         range: { start: 10, end: 2958525 }
       });
     });
     test("...when such position object has already added", () => {
-      expect(D.addPositionToState({...p1})).toEqual({
+      expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 2, item: 2, positionDataId: 10 },
         range: { start: 10, end: 2958525 }
       });
     });
     test("...when two such position objects has already added", () => {
-      expect(D.addPositionToState({...p1})).toEqual({
+      expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 3, item: 3, positionDataId: 10 },
         range: { start: 10, end: 2958525 }
@@ -51,7 +52,6 @@ describe("Departments module testing...\n", () => {
   });
 
   describe("addDepartmentToState method testing...", () => {
-    const d1 = { departmentNameId: 62, number: 1, start: 10 }
     test("...when departments source is empty", () => {
       expect(D.addDepartmentToState(d1)).toEqual({
         relevant: { departmentId: null },
@@ -76,7 +76,7 @@ describe("Departments module testing...\n", () => {
   });
 
   describe("getStateElementsOf method testing...", () => {
-    test("...when three position objects and three dipartment objects has been added", () => {
+    test("...when three position objects and three department objects has been added", () => {
       const result = [
         {
           relevant: { departmentId: null },
@@ -109,7 +109,33 @@ describe("Departments module testing...\n", () => {
           range: { start: 10, end: 2958525 }
         }
       ];
-      expect(D.dispatcher.stateOf('positions')).toEqual([]);
+      expect(D.getStateElementsOf(null)).toEqual(result);
+    });
+  });
+
+  describe("calculateItemFor method testing...", () => {
+    test("...when three position objects and three department objects has been added", () => {
+      expect(D.calculateItemFor(null)).toEqual(7);
+    });
+    test("...when three position objects and four department objects has been added", () => {
+      D.addDepartmentToState(d1);
+      expect(D.calculateItemFor(null)).toEqual(8);
+    });
+    test("...when four position objects and four department objects has been added", () => {
+      D.addPositionToState(p1);
+      expect(D.calculateItemFor(null)).toEqual(9);
+    });
+  });
+
+  describe("getDepartmentId method testing...", () => {
+    test("...when input is 'мотострелковый батальон'", () => {
+      expect(D.getDepartmentId('мотострелковый батальон')).toEqual(62);
+    });
+    test("...when input is 'мотострелковая рота'", () => {
+      expect(D.getDepartmentId('мотострелковая рота')).toEqual(59);
+    });
+    test("...when input is not valid", () => {
+      expect(D.getDepartmentId('нет такого названия подразделения')).toEqual(null);
     });
   });
 

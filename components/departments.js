@@ -22,7 +22,7 @@ module.exports = class Department {
     const data = { departmentNameId, id: this.dispatcher.stateOf('departments').length + 1 };
     data.item = this.calculateItemFor(superDepartmentId);
     if (number) data.number = number;
-    this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } }, 'departments');
+    this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } }, 'departments', false);
     return this.dispatcher.findInSource({ data }, 'departments');
   }
   addPositionToState({
@@ -34,21 +34,26 @@ module.exports = class Department {
     const relevant = { departmentId: null };
     const data = { positionDataId, id: this.dispatcher.stateOf('positions').length + 1 };
     data.item = this.calculateItemFor(relevant.departmentId);
-    this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } }, 'positions');
+    this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } }, 'positions', false);
     return this.dispatcher.findInSource({ data }, 'positions');
   }
 
   getStateElementsOf(departmentId) {
-    const result = [];
-    this.dispatcher.filterInSource({ relevant: { departmentId }}, 'positions')
-      .map((e) => result.push(e));
-    this.dispatcher.filterInSource({ relevant: { departmentId }}, 'departments')
-      .map((e) => result.push(e));
-    return result;
+    return [
+      ...this.dispatcher.filterInSource({ relevant: { departmentId }}, 'positions'),
+      ...this.dispatcher.filterInSource({ relevant: { departmentId }}, 'departments')
+    ];
   }
   calculateItemFor(departmentId = null) {
     const result = [...this.getStateElementsOf(departmentId)];
-    return result.length ? result[result.length - 1].data.item + 1 : 1;
+    return result.length ? result.length + 1 : 1;
+  }
+
+  getDepartmentId(departmentName) {
+    const result = this
+        .dispatcher
+        .findInSource({ nominative: departmentName}, 'department-names');
+    return result ? result.id : null;
   }
 
 
@@ -65,13 +70,7 @@ module.exports = class Department {
 }
 
 class DepartmentController {
-  constructor(departmentInfoEnumeration) {
-    this.departmentInfoEnumeration = departmentInfoEnumeration;
-    this.departments = [];
-  }
-  createDepartment(departmentInfoId) {
-    this.departments.push(new Department(this.departments.length, departmentInfoId));
-  }
+
   getDepartmentById(departmentId) { return this.departments[departmentId]; }
   subdue(subdepartment, department) {
     department.addDepartment(subdepartment.getId());
