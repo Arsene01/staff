@@ -1,9 +1,10 @@
 const Department = require('../../components/departments.js');
 const Dispatcher = require('../../dispatcher.js');
+const Position = require('../../components/positions.js');
 
 const D = new Department(new Dispatcher());
 const d1 = { departmentNameId: 62, number: 1, start: 10 };
-const p1 = { positionDataId: 10, number: 1, start: 10 };
+const p1 = { positionDataId: 1, start: 10 };
 
 describe("Departments module testing...\n", () => {
   describe("getDepartmentName method testing...", () => {
@@ -31,21 +32,21 @@ describe("Departments module testing...\n", () => {
     test("...when position source is empty", () => {
       expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
-        data: { id: 1, item: 1, positionDataId: 10 },
+        data: { id: 1, item: 1, positionDataId: 1 },
         range: { start: 10, end: 2958525 }
       });
     });
     test("...when such position object has already added", () => {
       expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
-        data: { id: 2, item: 2, positionDataId: 10 },
+        data: { id: 2, item: 2, positionDataId: 1 },
         range: { start: 10, end: 2958525 }
       });
     });
     test("...when two such position objects has already added", () => {
       expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
-        data: { id: 3, item: 3, positionDataId: 10 },
+        data: { id: 3, item: 3, positionDataId: 1 },
         range: { start: 10, end: 2958525 }
       });
     });
@@ -80,17 +81,17 @@ describe("Departments module testing...\n", () => {
       const result = [
         {
           relevant: { departmentId: null },
-          data: { id: 1, item: 1, positionDataId: 10 },
+          data: { id: 1, item: 1, positionDataId: 1 },
           range: { start: 10, end: 2958525 }
         },
         {
           relevant: { departmentId: null },
-          data: { id: 2, item: 2, positionDataId: 10 },
+          data: { id: 2, item: 2, positionDataId: 1 },
           range: { start: 10, end: 2958525 }
         },
         {
           relevant: { departmentId: null },
-          data: { id: 3, item: 3, positionDataId: 10 },
+          data: { id: 3, item: 3, positionDataId: 1 },
           range: { start: 10, end: 2958525 }
         },
         {
@@ -139,75 +140,35 @@ describe("Departments module testing...\n", () => {
     });
   });
 
-/*
-  test("DepartmentController initialization testing", () => {
-    expect(dc.departments).toEqual([]);
+  describe("getDepartment method testing...", () => {
+    test("...when input is null", () => {
+      expect(D.getDepartment(null)).toEqual('войсковой части 16544');
+    });
+    test("...when input is 1", () => {
+      expect(D.getDepartment(1)).toEqual('1 мотострелкового батальона войсковой части 16544');
+    });
   });
-  test("Department creating testing", () => {
-    dc.createDepartment(3);
-    expect(dc.departments).toEqual([
-      { id: 0, departmentInfoId: 3, positions: [], departments: [] }
-    ]);
+
+  describe("getPositionFullname method testing...", () => {
+    test("...when input is null", () => {
+      expect(D.getPositionFullname(null)).toEqual(null);
+    });
+    test("...when input is 1", () => {
+      const P = new Position(D.dispatcher);
+      P.addPositionData({
+        positionNameId: 1,
+        vusNumberId: 2,
+        tariffCategory: 2,
+        rangeId: 2
+      });
+      expect(D.getPositionFullname(1)).toEqual('водитель войсковой части 16544');
+    });
+    test("...when input is 5 for department with id equals 1", () => {
+      D.addPositionToState({ ...p1, superDepartmentId: 1 });
+      expect(D.getPositionFullname(5)).toEqual('водитель 1 мотострелкового батальона войсковой части 16544');
+    });
+    test("...when input is 5 and set dative case for department with id equals 1", () => {
+      expect(D.getPositionFullname(5, 'dative')).toEqual('водителю 1 мотострелкового батальона войсковой части 16544');
+    });
   });
-  test("Testing getDepartmentById method", () => {
-    expect(dc.getDepartmentById(0)).toEqual(
-      { id: 0, departmentInfoId: 3, positions: [], departments: [] }
-    );
-  });
-  test("Testing getDepartmentName method", () => {
-    const dep = dc.getDepartmentById(0);
-    expect(dc.getDepartmentName(dep)).toEqual('мотострелковый батальон');
-  });
-  test("Testing getDepartmentName method", () => {
-    const dep = dc.getDepartmentById(0);
-    expect(dc.getDepartmentName(dep, 'genitive')).toEqual('мотострелкового батальона');
-  });
-  test("Testing setNumberToDepartment method", () => {
-    const dep = dc.getDepartmentById(0);
-    dc.setNumberToDepartment(1, dep);
-    expect(dc.getDepartmentName(dep)).toEqual('1 мотострелковый батальон');
-  });
-  test("Testing setNumberToDepartment method", () => {
-    const dep = dc.getDepartmentById(0);
-    dc.setNumberToDepartment(2, dep);
-    expect(dc.getDepartmentName(dep, 'genitive')).toEqual('1 мотострелкового батальона');
-  });
-  test("Testing subdue method", () => {
-    dc.createDepartment(2);
-    const batalion = dc.getDepartmentById(0),
-          rota = dc.getDepartmentById(1);
-    dc.setNumberToDepartment(2, rota);
-    dc.subdue(rota, batalion);
-    expect(rota.getParentId()).toEqual(0);
-  });
-  test("Testing getDepartmentFullName method", () => {
-    const batalion = dc.getDepartmentById(0),
-          rota = dc.getDepartmentById(1);
-    expect(dc.getDepartmentFullName(rota, 'genitive')).toEqual('2 мотострелковой роты 1 мотострелкового батальона');
-  });
-  test("Testing getDepartmentFullName method", () => {
-    const batalion = dc.getDepartmentById(0),
-          rota = dc.getDepartmentById(1);
-    expect(dc.getDepartmentFullName(rota, 'dative')).toEqual('2 мотострелковой роте 1 мотострелкового батальона');
-  });
-  test("Testing getDepartments method", () => {
-    const batalion = dc.getDepartmentById(0),
-          rota = dc.getDepartmentById(1);
-    expect(batalion.getDepartments()).toEqual([1]);
-  });
-  test("Testing getPositionIds method", () => {
-    const batalion = dc.getDepartmentById(0),
-          rota = dc.getDepartmentById(1);
-    expect(dc.getPositionIds(batalion)).toEqual([ ]);
-  });
-  test("Testing addPositionToDepartment method", () => {
-    const batalion = dc.getDepartmentById(0);
-    dc.addPositionToDepartment(1, batalion);
-    dc.addPositionToDepartment(3, batalion);
-    expect(batalion.getPositions()).toEqual([ 1, 3 ]);
-  });
-  test("", () => {});
-  test("", () => {});
-  test("", () => {});
-  test("", () => {});*/
 });

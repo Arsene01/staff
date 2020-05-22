@@ -1,4 +1,5 @@
 const { getCase } = require('./cases.js');
+const Position = require('./positions.js');
 
 module.exports = class Department {
   constructor(dispatcher) {
@@ -31,7 +32,7 @@ module.exports = class Department {
     start
   }) {
     if (!start) return;
-    const relevant = { departmentId: null };
+    const relevant = { departmentId: superDepartmentId ? superDepartmentId : null };
     const data = { positionDataId, id: this.dispatcher.stateOf('positions').length + 1 };
     data.item = this.calculateItemFor(relevant.departmentId);
     this.dispatcher.add({ relevant, data, range: { start, end: 2958525 } }, 'positions', false);
@@ -55,18 +56,28 @@ module.exports = class Department {
         .findInSource({ nominative: departmentName}, 'department-names');
     return result ? result.id : null;
   }
-
-
-  addDepartment(departmentId) {
-    this.departments.push(departmentId);
+  getDepartment(departmentId) {
+    const result = [];
+    let d = this.dispatcher.findInSource({ data: { id: departmentId }}, 'departments');
+    while (d) {
+      if (d.data.number) result.push(d.data.number);
+      result.push(this.getDepartmentName(d.data.departmentNameId, 'genitive'));
+      d = this
+          .dispatcher
+          .findInSource({ data: { id: d.relevant.departmentId }}, 'departments');
+    }
+    result.push('войсковой части 16544');
+    return result.join(' ');
   }
-  setParentId(departmentId) { this.parentId = departmentId; }
-  getParentId() { return this.parentId === undefined ? null : this.parentId; }
-  getDepartmentInfoId() { return this.departmentInfoId; }
-  getId() { return this.id; }
-  getNumber() { return this.number ? this.number : null; }
-  getPositions() { return this.positions ? this.positions : null; }
-  getDepartments() { return this.departments; }
+
+  getPositionFullname(positionId, inCase) {
+    const p = this.dispatcher.findInSource({ data: { id: positionId }}, 'positions');
+    return p ? [
+      (new Position(this.dispatcher)).getPosition(p.data.positionDataId, inCase),
+      this.getDepartment(p.relevant.departmentId)
+    ].join(' ') : null;
+  }
+
 }
 
 class DepartmentController {
