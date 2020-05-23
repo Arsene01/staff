@@ -53,6 +53,9 @@ describe("Positions module testing...\n", () => {
     test("...when input is empty object", () => {
       expect(P.isValid({})).toEqual(false);
     });
+    test("...when no input", () => {
+      expect(P.isValid()).toEqual(false);
+    });
   });
 
   describe("addPositionData method testing...", () => {

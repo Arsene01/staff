@@ -47,63 +47,91 @@ describe("DataSource class testing...", () => {
     ds.add({ type: 'object', value: 'primitive value'});
     expect(ds.findIndex({type: 'object'})).toEqual(0);
   });
-  test("fixRanges method testing...", () => {
-    const path1 = p.join(projectPath, 'tdata', 'savingData.txt');
-    const ds = new DataSource(path1);
 
-    const o1 = {
-      relevant: { personId: 1 },
-      data: {type: 'object', value: 'primitive value'},
-      range: { start: 1, end: 2958525 }
-    };
-    const o2 = {
-      relevant: { personId: 1 },
-      data: {type: 'object', value: 'primitive value'},
-      range: { start: 5, end: 2958525 }
-    };
-    const target = {
-      relevant: { personId: 1 },
-      data: { type: 'object', value: 'primitive value'},
-      range: { start: 20, end: 2958525 }
-    };
-    ds.add(o1);
-    ds.add(o2);
-    ds.fixRanges(target);
-    expect(ds.state).toEqual([
-      {
+  describe("fixRanges method testing...", () => {
+    const path1 = p.join(projectPath, 'tdata', 'savingData.txt');
+    test("when new object added range.end is limited", () => {
+      const ds = new DataSource(path1);
+      const o1 = {
         relevant: { personId: 1 },
         data: {type: 'object', value: 'primitive value'},
-        range: { start: 1, end: 4 }
-      },
-      {
+        range: { start: 1, end: 2958525 }
+      };
+      const o2 = {
         relevant: { personId: 1 },
         data: {type: 'object', value: 'primitive value'},
-        range: { start: 5, end: 19 }
-      }
-    ]);
-  });
-  test("fixRanges method testing...", () => {
-    const path1 = p.join(projectPath, 'tdata', 'savingData.txt');
-    const ds = new DataSource(path1);
+        range: { start: 5, end: 2958525 }
+      };
+      const target = {
+        relevant: { personId: 1 },
+        data: { type: 'object', value: 'primitive value'},
+        range: { start: 20, end: 2958525 }
+      };
 
-    const o1 = {
-      relevant: { personId: 1 },
-      data: {type: 'object', value: 'primitive value'},
-      range: { start: 20, end: 2958525 }
-    };
-    const target = {
-      relevant: { personId: 1 },
-      data: { type: 'object', value: 'primitive value'},
-      range: { start: 10, end: 2958525 }
-    };
-    ds.add(o1);
-    ds.fixRanges(target);
-    expect(ds.state).toEqual([
-      {
-        relevant: {},
+      ds.add(o1);
+      ds.add(o2);
+      ds.fixRanges(target);
+
+      expect(ds.state).toEqual([
+        {
+          relevant: { personId: 1 },
+          data: {type: 'object', value: 'primitive value'},
+          range: { start: 1, end: 4 }
+        },
+        {
+          relevant: { personId: 1 },
+          data: {type: 'object', value: 'primitive value'},
+          range: { start: 5, end: 19 }
+        }
+      ]);
+    });
+    test("when record's range start and end is within adding object's same properties", () => {
+      const ds = new DataSource(path1);
+      const o1 = {
+        relevant: { personId: 1 },
         data: {type: 'object', value: 'primitive value'},
         range: { start: 20, end: 2958525 }
-      }
-    ]);
+      };
+      const target = {
+        relevant: { personId: 1 },
+        data: { type: 'object', value: 'primitive value'},
+        range: { start: 10, end: 2958525 }
+      };
+
+      ds.add(o1);
+      ds.fixRanges(target);
+
+      expect(ds.state).toEqual([
+        {
+          relevant: {},
+          data: {type: 'object', value: 'primitive value'},
+          range: { start: 20, end: 2958525 }
+        }
+      ]);
+    });
+    test("when record's start and end more than adding object's start and end respectively", () => {
+      const ds = new DataSource(path1);
+      const o1 = {
+        relevant: { personId: 1 },
+        data: {type: 'object', value: 'primitive value'},
+        range: { start: 20, end: 2958525 }
+      };
+      const target = {
+        relevant: { personId: 1 },
+        data: { type: 'object', value: 'primitive value'},
+        range: { start: 10, end: 30 }
+      };
+
+      ds.add(o1);
+      ds.fixRanges(target);
+
+      expect(ds.state).toEqual([
+        {
+          relevant: { personId: 1 },
+          data: {type: 'object', value: 'primitive value'},
+          range: { start: 31, end: 2958525 }
+        }
+      ]);
+    });
   });
 });

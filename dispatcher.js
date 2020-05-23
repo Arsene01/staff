@@ -65,17 +65,7 @@ module.exports = class Dispatcher {
 
 
 //it is possible below methods not required for this module
-  limitPeriods(state, entityId, startDate, endDate) {
-    state
-      .filter(record => record.entityId === entityId)
-      .filter(record => !record.status)
-      .map(record => {
-        if (record.endDate < startDate) return;
-        if (record.startDate >= startDate) record.status = 'inactive';
-        else record.endDate = startDate - 1;
-        return record;
-      });
-  }
+/*
   getMessage(message) {
     if (message.indexOf('quit') >=0) process.exit(1);
     if (message.indexOf('create entity') >= 0) return `Entity #${this.createEntity()} has been created!\n`;
@@ -102,29 +92,5 @@ module.exports = class Dispatcher {
       return `${personName} registered on adress ${this.getRegistration(registrationId)}\n`;
     }
     return 'No eligable commands selected. Print your command:\n';
-  }
-  createEntity() {
-    const state = this.getDataSource('entities').source.getState();
-    state.push(state.length);
-    return state[state.length - 1];
-  }
-
-
-  getRegistration(registrationId) {
-    return this.getDataSource('registrations').source.getState()[registrationId];
-  }
-  getRegistrationId(registration) {
-    return this.getIndexInSource(registration, 'registrations');
-  }
-  enlistMilitary(entityId, typeId, startDate, endDate) {
-    //typeId: 0 - conscript, 1 - contract
-    const militaryPersons = this.getDataSource('military-persons').source.getState();
-    this.limitPeriods(militaryPersons, entityId, startDate, endDate);
-    militaryPersons.push({entityId, typeId, startDate, endDate})
-  }
-  registerEntityAdress(entityId, registrationId, startDate, endDate) {
-    const state = this.getDataSource(stateName).source.getState();
-    this.limitPeriods(state, entityId, startDate, endDate);
-    state.push({entityId, registrationId, startDate, endDate});
-  }
+  }*/
 }

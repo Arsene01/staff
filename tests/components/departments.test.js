@@ -60,6 +60,9 @@ describe("Departments module testing...\n", () => {
         range: { start: 10, end: 2958525 }
       });
     });
+    test("...when department with no start", () => {
+      expect(D.addDepartmentToState({ ...d1, start: null })).toEqual(undefined);
+    });
     test("...when such department object has already added", () => {
       expect(D.addDepartmentToState(d1)).toEqual({
         relevant: { departmentId: null },

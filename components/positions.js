@@ -68,13 +68,4 @@ module.exports = class Position {
     this.dispatcher.add({ ...positionData, id }, 'position-data');
     return this.findPositionData(positionData);
   }
-
-  //Maybe this function is more relevant for departments
-  insertPositionToState(departmentId, positionId, start) {
-    return {
-      relevant: { departmentId },
-      data: { item, positionId, number },
-      range: { start }
-    }
-  }
 }
