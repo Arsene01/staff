@@ -1,3 +1,4 @@
+const { getCase } = require('./cases.js');
 module.exports = class RangeController {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
@@ -6,9 +7,7 @@ module.exports = class RangeController {
   getRange(rangeId, inCase) {
     const result = this.dispatcher.stateOf('ranges')
         .find((r) => r.id === rangeId);
-    return result ? result[
-      [ 'nominative', 'accusative', 'dative', 'genitive'].includes(inCase) ? inCase : 'nominative'
-    ] : null;
+    return result ? result[getCase(inCase)] : null;
   }
   rangeIdOf(nominativeRange) {
     const result = this.dispatcher.stateOf('ranges')
