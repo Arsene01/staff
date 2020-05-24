@@ -1,13 +1,19 @@
-class PositionService {
-  constructor() {
-    this.services = [];
+module.exports = class PositionService {
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
   }
-  applyPosition(positionId, personId, beginDateNumber) {
-    if (this.isPositionFreeOnDate(positionId, beginDateNumber)) this.services.push({
-      positionId, personId, beginDate: beginDateNumber
-    });
+  applyPosition(positionId, personId, start) {
+    if ((!positionId) || (!personId) || (!start)) return;
+    if (!this.isPositionFree(positionId, { start })) return;
+    this.dispatcher.add(
+      {
+        relevant: { positionId, personId },
+        range: { start, end: 2958525 }
+      },
+      'position-service'
+    );
   }
-  freePosition(positionId, personId, endDateNumber) {
+  freePosition(positionId, personId, end) {
     for (let i = 0; i < this.services.length; i++) {
       const serviceObject = this.services[i];
       if (serviceObject.positionId !== positionId) continue;
@@ -17,28 +23,14 @@ class PositionService {
       break;
     }
   }
-  isPositionFreeOnDate(positionId, dateNumber) {
-    const positionServices = this.services
-      .filter(service => service.positionId === positionId);
-    const length = positionServices.length;
-    if (!length) return true;
-    if (
-      positionServices[length - 1].endDate &&
-      positionServices[length - 1].endDate < dateNumber
-    ) return true;
-    return false;
-  }
-  deletePositionService(index) {
-    if (index >= this.services.length || index < 0) return;
-    if (index === 0) {
-      this.services = this.services.slice(1);
-      return;
-    }
-    this.services = [
-      ...this.services.slice(0, index),
-      ...this.services.slice(index + 1, this.services.length)
-    ];
+  isPositionFree(positionId, range) {
+    if ((!range) || (!range.start) || (!positionId)) return;
+    if (!range.end) range.end = 2958525;
+    const services = this.dispatcher
+      .filterInSource({ relevant: { positionId }}, 'position-service')
+      .filter((s) => {
+        return (s.range.end >= range.start && s.range.start <= range.end) ? true : false;
+      });
+    return services.length ? false : true;
   }
 }
-const createPositionService = () => new PositionService();
-exports.createPositionService = createPositionService;

@@ -11,6 +11,12 @@ module.exports = class Department {
       .findInSource({ id: departmentNameId }, 'department-names');
     return result ? result[getCase(inCase)] : null;
   }
+  getDepartmentNameId(departmentName) {
+    const result = this
+      .dispatcher
+      .findInSource({ nominative: departmentName }, 'department-names');
+    return result ? result.id : null;
+  }
 
   addDepartmentToState({
     departmentNameId,

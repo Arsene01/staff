@@ -1,61 +1,43 @@
-const PS = require('../../components/position-service.js');
+const PositionService = require('../../components/position-service.js');
+const Dispatcher = require('../../dispatcher.js');
 
-const positionService = PS.createPositionService();
+const p = new PositionService(new Dispatcher());
 
-describe("PositionService module testing\n", () => {
-  test("Sign that person applies position", () => {
-    positionService.applyPosition(0, 2, 2);
-    expect(positionService.services).toEqual([
-      { positionId: 0, personId: 2, beginDate: 2 }
-    ]);
-  });
-  test("Check position is free", () => {
-    expect(positionService.isPositionFreeOnDate(0, 4)).toEqual(false);
-  });
-  test("Sign to service record free position date", () => {
-    positionService.freePosition(0, 2, 3);
-    expect(positionService.services).toEqual([
-      { positionId: 0, personId: 2, beginDate: 2, endDate: 3 }
-    ]);
-  });
-  test("Check position is free", () => {
-    expect(positionService.isPositionFreeOnDate(0, 4)).toEqual(true);
+describe("PositionService class...", () => {
+  const s = p.dispatcher.stateOf('position-service');
+  describe("testing applyPosition method...", () => {
+    test("when position service data source is empty", () => {
+      p.applyPosition(1, 1, 42730);
+      expect(s).toEqual([
+        {
+          relevant: { positionId: 1, personId: 1 },
+          range: { start: 42730, end: 2958525 }
+        }
+      ]);
+    });
+    test("when repeatly position applying attemp", () => {
+      p.applyPosition(1, 1, 42730);
+      expect(s).toEqual([
+        {
+          relevant: { positionId: 1, personId: 1 },
+          range: { start: 42730, end: 2958525 }
+        }
+      ]);
+    });
+    test("when position has freed one day before", () => {
+      p.applyPosition(2, 2, 43000);
+      expect(s).toEqual([
+        {
+          relevant: { positionId: 1, personId: 1 },
+          range: { start: 42730, end: 2958525 }
+        },
+        {
+          relevant: { positionId: 2, personId: 2 },
+          range: { start: 43000, end: 2958525 }
+        }
+      ]);
+    });
   });
 
-  test("Sign that person applies position", () => {
-    positionService.applyPosition(0, 1, 5);
-    expect(positionService.services).toEqual([
-      { positionId: 0, personId: 2, beginDate: 2, endDate: 3 },
-      { positionId: 0, personId: 1, beginDate: 5 }
-    ]);
-  });
-  test("Check position is free", () => {
-    expect(positionService.isPositionFreeOnDate(0, 4)).toEqual(false);
-  });
-  test("Check position is free", () => {
-    expect(positionService.isPositionFreeOnDate(0, 6)).toEqual(false);
-  });
-  test("Sign to service record free position date", () => {
-    positionService.freePosition(0, 2, 6);
-    expect(positionService.services).toEqual([
-      { positionId: 0, personId: 2, beginDate: 2, endDate: 3 },
-      { positionId: 0, personId: 1, beginDate: 5 }
-    ]);
-  });
-  test("Sign to service record free position date", () => {
-    positionService.freePosition(0, 1, 6);
-    expect(positionService.services).toEqual([
-      { positionId: 0, personId: 2, beginDate: 2, endDate: 3 },
-      { positionId: 0, personId: 1, beginDate: 5, endDate: 6 }
-    ]);
-  });
-  test("Check position is free", () => {
-    expect(positionService.isPositionFreeOnDate(0, 7)).toEqual(true);
-  });
-  test("Delete service record from positionService", () => {
-    positionService.deletePositionService(0)
-    expect(positionService.services).toEqual([
-      { positionId: 0, personId: 1, beginDate: 5, endDate: 6 }
-    ]);
-  });
+
 });

@@ -10,6 +10,7 @@ module.exports = class DataSource {
     this._state = this._state ? this._state : [];
   }
   get state() { return this._state; }
+  clear() { this._state = null; this._state = []; }
   save() {
     fs.writeFileSync(this.path, JSON.stringify(this.state), 'utf8');
   }
