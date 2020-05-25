@@ -59,20 +59,23 @@ module.exports = class Person {
   setLastname(l) {
     if (this.lastnameId) return;
     this.person._lastnameId = this.findInSource({ value: l}, 'lastnames').id;
+    return this;
   }
   setFirstname(f) {
     if (this.firstnameId) return;
     this.person._firstnameId = this.findInSource({ value: f}, 'firstnames').id;
+    return this;
   }
   setMiddlename(m) {
     if (this.middlenameId) return;
     this.person._middlenameId = this.findInSource({ value: m}, 'middlenames').id;
+    return this;
   }
   set birthdate(b) {
     if (this.birthdate) return;
     this.person._birthdate = toNumber(b);
   }
-  newPerson() { this.person = {}; }
+  newPerson() { this.person = {}; return this; }
   registerData(relevant, data, range, dataSourceName) {
     if (!dataSourceName) return;
     if (!range) return;
@@ -116,6 +119,21 @@ module.exports = class Person {
       { ...address },
       range,
       'address-data'
+    );
+  }
+  raiseRange(personId, rangeId, start) {
+    if (!personId || !rangeId || !start) return;
+    this
+        .dispatcher
+        .getDataSource('person-ranges')
+        .source
+        .fixRanges({ relevant: { personId }, range: { start, end: 2958525}});
+    this.dispatcher.add(
+      {
+        relevant: { personId, rangeId },
+        range: { start, end: 2958525 }
+      },
+      'person-ranges'
     );
   }
   addServicePeriod(service, range) {

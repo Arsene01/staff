@@ -23,6 +23,7 @@ module.exports = class Dispatcher {
       'middlename-endings',
       'middlenames',
       'person-data',
+      'person-ranges',
       'persons',
       'position-data',
       'position-names',

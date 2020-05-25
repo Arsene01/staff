@@ -9,6 +9,7 @@ const { toNumber } = require('../components/date-transform.js');
 describe("Application working...", () => {
   const D = new Dispatcher();
   const d = new Department(D);
+  const P = new Person(D);
   const p = new Position(D);
   const r = new Range(D);
 
@@ -521,7 +522,7 @@ describe("Application working...", () => {
           }
         ])
       });
-    });    
+    });
     describe("checking position names...", () => {
 
       test("when input is 1", () => {
@@ -579,6 +580,405 @@ describe("Application working...", () => {
         expect(d.getPositionFullname(18)).toEqual('командир взвода 1 мотострелкового взвода 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
       });
     });
+    describe("creating persons...", () => {
+      test("when adding person 'Кабиев Тлектес Серикович'", () => {
+        P
+          .newPerson()
+          .setLastname('Кабиев')
+          .setFirstname('Тлектес')
+          .setMiddlename('Серикович');
+        P.birthdate = '02.01.1983';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 1 },
+            data: {
+              _lastnameId: 687, _firstnameId: 623, _middlenameId: 486,
+              _birthdate: 30318
+            },
+            range: { start: 30318, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Сергиенко Николай Васильевич'", () => {
+        P
+          .newPerson()
+          .setLastname('Сергиенко')
+          .setFirstname('Николай')
+          .setMiddlename('Васильевич');
+        P.birthdate = '07.12.1983';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 2 },
+            data: {
+              _lastnameId: 1312, _firstnameId: 471, _middlenameId: 52,
+              _birthdate: 30657
+            },
+            range: { start: 30657, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Ерофеев Матвей Андреевич'", () => {
+        P
+          .newPerson()
+          .setLastname('Ерофеев')
+          .setFirstname('Матвей')
+          .setMiddlename('Андреевич');
+        P.birthdate = '09.07.1989';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 3 },
+            data: {
+              _lastnameId: 591, _firstnameId: 410, _middlenameId: 154,
+              _birthdate: 32698
+            },
+            range: { start: 32698, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Велитарский Александр Геннадьевич'", () => {
+        P
+          .newPerson()
+          .setLastname('Велитарский')
+          .setFirstname('Александр')
+          .setMiddlename('Геннадьевич');
+        P.birthdate = '23.01.1986';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 4 },
+            data: {
+              _lastnameId: 1736, _firstnameId: 51, _middlenameId: 89,
+              _birthdate: 31435
+            },
+            range: { start: 31435, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Боков Мустафа Курашевич'", () => {
+        P
+          .newPerson()
+          .setLastname('Боков')
+          .setFirstname('Мустафа')
+          .setMiddlename('Курашевич');
+        P.birthdate = '23.08.1986';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 5 },
+            data: {
+              _lastnameId: 278, _firstnameId: 442, _middlenameId: 280,
+              _birthdate: 31647
+            },
+            range: { start: 31647, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Тутуров Игорь Викторович'", () => {
+        P
+          .newPerson()
+          .setLastname('Тутуров')
+          .setFirstname('Игорь')
+          .setMiddlename('Викторович');
+        P.birthdate = '28.02.1990';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 6 },
+            data: {
+              _lastnameId: 1470, _firstnameId: 301, _middlenameId: 106,
+              _birthdate: 32932
+            },
+            range: { start: 32932, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Садуллаев Юсуп Сайдмагомедович'", () => {
+        P
+          .newPerson()
+          .setLastname('Садуллаев')
+          .setFirstname('Юсуп')
+          .setMiddlename('Сайдмагомедович');
+        P.birthdate = '17.07.1975';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 7 },
+            data: {
+              _lastnameId: 1249, _firstnameId: 714, _middlenameId: 718,
+              _birthdate: 27592
+            },
+            range: { start: 27592, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Кулбахтин Илюз Филюзович'", () => {
+        P
+          .newPerson()
+          .setLastname('Кулбахтин')
+          .setFirstname('Илюз')
+          .setMiddlename('Филюзович');
+        P.birthdate = '06.06.1993';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 8 },
+            data: {
+              _lastnameId: 838, _firstnameId: 320, _middlenameId: 526,
+              _birthdate: 34126
+            },
+            range: { start: 34126, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Лебедев Алексей Васильевич'", () => {
+        P
+          .newPerson()
+          .setLastname('Лебедев')
+          .setFirstname('Алексей')
+          .setMiddlename('Васильевич');
+        P.birthdate = '24.11.1995';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 9 },
+            data: {
+              _lastnameId: 872, _firstnameId: 52, _middlenameId: 52,
+              _birthdate: 35027
+            },
+            range: { start: 35027, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Джамалудинов Али Дибирович'", () => {
+        P
+          .newPerson()
+          .setLastname('Джамалудинов')
+          .setFirstname('Али')
+          .setMiddlename('Дибирович');
+        P.birthdate = '22.04.1979';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 10 },
+            data: {
+              _lastnameId: 516, _firstnameId: 53, _middlenameId: 396,
+              _birthdate: 28967
+            },
+            range: { start: 28967, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Адилов Тажидин Исаевич'", () => {
+        P
+          .newPerson()
+          .setLastname('Адилов')
+          .setFirstname('Тажидин')
+          .setMiddlename('Исаевич');
+        P.birthdate = '15.01.1980';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 11 },
+            data: {
+              _lastnameId: 1737, _firstnameId: 602, _middlenameId: 31,
+              _birthdate: 29235
+            },
+            range: { start: 29235, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Малиновская Марина Жамалудиновна'", () => {
+        P
+          .newPerson()
+          .setLastname('Малиновская')
+          .setFirstname('Марина')
+          .setMiddlename('Жамалудиновна');
+        P.birthdate = '19.10.1983';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 12 },
+            data: {
+              _lastnameId: 935, _firstnameId: 404, _middlenameId: 575,
+              _birthdate: 30608
+            },
+            range: { start: 30608, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Дулин Виктор Валентинович'", () => {
+        P
+          .newPerson()
+          .setLastname('Дулин')
+          .setFirstname('Виктор')
+          .setMiddlename('Валентинович');
+        P.birthdate = '25.01.1984';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 13 },
+            data: {
+              _lastnameId: 569, _firstnameId: 180, _middlenameId: 205,
+              _birthdate: 30706
+            },
+            range: { start: 30706, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Арясов Виталий Павлович'", () => {
+        P
+          .newPerson()
+          .setLastname('Арясов')
+          .setFirstname('Виталий')
+          .setMiddlename('Павлович');
+        P.birthdate = '23.03.1981';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 14 },
+            data: {
+              _lastnameId: 145, _firstnameId: 188, _middlenameId: 171,
+              _birthdate: 29668
+            },
+            range: { start: 29668, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Сайгидулаев Ахмед Шагидханович'", () => {
+        P
+          .newPerson()
+          .setLastname('Сайгидулаев')
+          .setFirstname('Ахмед')
+          .setMiddlename('Шагидханович');
+        P.birthdate = '05.03.1980';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 15 },
+            data: {
+              _lastnameId: 1254, _firstnameId: 124, _middlenameId: 721,
+              _birthdate: 29285
+            },
+            range: { start: 29285, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Багамаев Жамал Джамалутдинович'", () => {
+        P
+          .newPerson()
+          .setLastname('Багамаев')
+          .setFirstname('Жамал')
+          .setMiddlename('Джамалутдинович');
+        P.birthdate = '11.06.1992';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 16 },
+            data: {
+              _lastnameId: 1738, _firstnameId: 728, _middlenameId: 12,
+              _birthdate: 33766
+            },
+            range: { start: 33766, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Дурдыев Анзор Лаверенович'", () => {
+        P
+          .newPerson()
+          .setLastname('Дурдыев')
+          .setFirstname('Анзор')
+          .setMiddlename('Лаверенович');
+        P.birthdate = '27.03.1994';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 17 },
+            data: {
+              _lastnameId: 571, _firstnameId: 86, _middlenameId: 919,
+              _birthdate: 34420
+            },
+            range: { start: 34420, end: 2958525 }
+          }
+        ])
+      });
+      test("when adding person 'Охотников Александр Валерьевич'", () => {
+        P
+          .newPerson()
+          .setLastname('Охотников')
+          .setFirstname('Александр')
+          .setMiddlename('Валерьевич');
+        P.birthdate = '20.06.1996';
+
+        const state = [...D.stateOf('person-data')];
+        P.registerPerson();
+        expect(D.stateOf('person-data')).toEqual([
+          ...state,
+          {
+            relevant: { personId: 18 },
+            data: {
+              _lastnameId: 1135, _firstnameId: 51, _middlenameId: 102,
+              _birthdate: 35236
+            },
+            range: { start: 35236, end: 2958525 }
+          }
+        ])
+      });
+    });
+    describe("", () => {});
 
   });
 });

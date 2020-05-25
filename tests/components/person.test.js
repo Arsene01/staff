@@ -30,42 +30,54 @@ describe("Person class testing...", () => {
     p.birthdate = '11.12.1990';
     expect(p.person._birthdate).toEqual(33218);
   });
-  test("lastname method testing...", () => {
-    expect(p.lastname()).toEqual('Кобелев');
+  describe("lastname", () => {
+    test("when input is not defined", () => {
+      expect(p.lastname()).toEqual('Кобелев');
+    });
+    test("when input is 'genitive'", () => {
+      expect(p.lastname('genitive')).toEqual('Кобелева');
+    });
+    test("when input is 'dative'", () => {
+      expect(p.lastname('dative')).toEqual('Кобелеву');
+    });
   });
-  test("lastname method testing...", () => {
-    expect(p.lastname('genitive')).toEqual('Кобелева');
+
+  describe("firstname", () => {
+    test("when input is not defined", () => {
+      expect(p.firstname()).toEqual('Арсен');
+    });
+    test("when input is 'genitive'", () => {
+      expect(p.firstname('genitive')).toEqual('Арсена');
+    });
+    test("when input is 'dative'", () => {
+      expect(p.firstname('dative')).toEqual('Арсену');
+    });
   });
-  test("lastname method testing...", () => {
-    expect(p.lastname('dative')).toEqual('Кобелеву');
+
+  describe("middlename", () => {
+    test("when input is not defined", () => {
+      expect(p.middlename()).toEqual('Владимирович');
+    });
+    test("when input is 'genitive'", () => {
+      expect(p.middlename('genitive')).toEqual('Владимировича');
+    });
+    test("when input is 'dative'", () => {
+      expect(p.middlename('dative')).toEqual('Владимировичу');
+    });
   });
-  test("firstname method testing...", () => {
-    expect(p.firstname()).toEqual('Арсен');
+
+  describe("fullname", () => {
+    test("when input is not defined", () => {
+      expect(p.fullname()).toEqual('Кобелев Арсен Владимирович');
+    });
+    test("when input is 'genitive'", () => {
+      expect(p.fullname('genitive')).toEqual('Кобелева Арсена Владимировича');
+    });
+    test("when input is 'dative'", () => {
+      expect(p.fullname('dative')).toEqual('Кобелеву Арсену Владимировичу');
+    });
   });
-  test("firstname method testing...", () => {
-    expect(p.firstname('genitive')).toEqual('Арсена');
-  });
-  test("firstname method testing...", () => {
-    expect(p.firstname('dative')).toEqual('Арсену');
-  });
-  test("middlename method testing...", () => {
-    expect(p.middlename()).toEqual('Владимирович');
-  });
-  test("middlename method testing...", () => {
-    expect(p.middlename('genitive')).toEqual('Владимировича');
-  });
-  test("middlename method testing...", () => {
-    expect(p.middlename('dative')).toEqual('Владимировичу');
-  });
-  test("fullname method testing...", () => {
-    expect(p.fullname()).toEqual('Кобелев Арсен Владимирович');
-  });
-  test("fullname method testing...", () => {
-    expect(p.fullname('genitive')).toEqual('Кобелева Арсена Владимировича');
-  });
-  test("fullname method testing...", () => {
-    expect(p.fullname('dative')).toEqual('Кобелеву Арсену Владимировичу');
-  });
+
   test("birthdate getter testing...", () => {
     expect(p.birthdate).toEqual('11.12.1990');
   });
@@ -224,5 +236,33 @@ describe("Person class testing...", () => {
     };
     expect(state[0]).toEqual(result);
   });
-  
+
+  describe("raiseRange", () => {
+    test("when input not valid", () => {
+      expect(p.raiseRange(1, 2)).toEqual(undefined);
+    });
+    test("when input is 'рядовой' since '26.12.2016'", () => {
+      p.raiseRange(1, 1, toNumber('26.12.2016'));
+      expect(p.dispatcher.stateOf('person-ranges')).toEqual([
+        {
+          relevant: { personId: 1, rangeId: 1 },
+          range: { start: 42730, end: 2958525 }
+        }
+      ]);
+    });
+    test("when input is 'ефрейтор' since '01.06.2017'", () => {
+      p.raiseRange(1, 2, toNumber('01.06.2017'));
+      expect(p.dispatcher.stateOf('person-ranges')).toEqual([
+        {
+          relevant: { personId: 1, rangeId: 1 },
+          range: { start: 42730, end: 42886 }
+        },
+        {
+          relevant: { personId: 1, rangeId: 2 },
+          range: { start: 42887, end: 2958525 }
+        }
+      ]);
+    });
+  });
+
 });
