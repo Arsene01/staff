@@ -14,17 +14,14 @@ module.exports = class PositionService {
     );
   }
   freePosition(positionId, personId, end) {
-    for (let i = 0; i < this.services.length; i++) {
-      const serviceObject = this.services[i];
-      if (serviceObject.positionId !== positionId) continue;
-      if (serviceObject.personId !== personId) continue;
-      if (serviceObject.endDate) continue;
-      serviceObject.endDate = endDateNumber;
-      break;
-    }
+    if (!positionId || !personId || !end) return;
+    this.dispatcher.getDataSource('position-service').source.fixRanges({
+      relevant: { personId, positionId },
+      range: { start: end + 1 }
+    });
   }
   isPositionFree(positionId, range) {
-    if ((!range) || (!range.start) || (!positionId)) return;
+    if (!range || !range.start || !positionId || typeof positionId !== 'number') return;
     if (!range.end) range.end = 2958525;
     const services = this.dispatcher
       .filterInSource({ relevant: { positionId }}, 'position-service')
