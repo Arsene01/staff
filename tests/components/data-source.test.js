@@ -48,7 +48,7 @@ describe("DataSource class testing...", () => {
     expect(ds.findIndex({type: 'object'})).toEqual(0);
   });
 
-  describe("fixRanges method testing...", () => {
+  describe("testing fixRanges method...", () => {
     const path1 = p.join(projectPath, 'tdata', 'savingData.txt');
     test("when new object added range.end is limited", () => {
       const ds = new DataSource(path1);
@@ -134,4 +134,55 @@ describe("DataSource class testing...", () => {
       ]);
     });
   });
+
+  describe("testing delete method...", () => {
+    const ds = new DataSource(p.join(projectPath, 'tdata', 'savingData.txt'));
+    const o = { type: 'object', value: 'primitive value'};
+    test("when state is after initializing", () => {
+      expect(ds.state).toEqual([]);
+    });
+    test("when state is after adding three elements", () => {
+      ds.add({...o});
+      ds.add({...o});
+      ds.add({...o});
+
+      expect(ds.state).toEqual([{...o},{...o},{...o}]);
+    });
+    test("when state is after deleting first element", () => {
+      ds.delete(0);
+
+      expect(ds.state).toEqual([{...o},{...o}]);
+    });
+    test("when state is after deleting one element else", () => {
+      ds.delete(1);
+
+      expect(ds.state).toEqual([{...o}]);
+    });
+    test("when state is after deleting one element else", () => {
+      ds.delete(0);
+
+      expect(ds.state).toEqual([]);
+    });
+  });
+
+  describe("testing clear method...", () => {
+    const ds = new DataSource(p.join(projectPath, 'tdata', 'savingData.txt'));
+    const o = { type: 'object', value: 'primitive value'};
+    test("when state is after initializing", () => {
+      expect(ds.state).toEqual([]);
+    });
+    test("when state is after adding three elements", () => {
+      ds.add({...o});
+      ds.add({...o});
+      ds.add({...o});
+
+      expect(ds.state).toEqual([{...o},{...o},{...o}]);
+    });
+    test("when state is after deleting first element", () => {
+      ds.clear();
+
+      expect(ds.state).toEqual([]);
+    });
+  });
+
 });

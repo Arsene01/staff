@@ -19,6 +19,13 @@ module.exports = class DataSource {
     if (isSwallow) this.fixRanges(record);
     this.state.push(record);
   }
+  clear() {
+    while(this.state.length) this.delete(0);
+  }
+  delete(index) {
+    if (index < 0 || index > this.state.length || !this.state.length) return;
+    this.state.splice(index, 1);
+  }
   filter(config) {
     return this.state.filter(record => {
       return deepEqual(record, config);
