@@ -21,13 +21,13 @@ describe("Positions module testing...\n", () => {
 
   describe("getVusNumberId method testing...", () => {
     test("...when input is '837037'", () => {
-      expect(P.getVusNumberId('837037')).toEqual(2);
+      expect(P.getVusNumberId('837037')).toEqual(62);
     });
     test("...when input is '124037'", () => {
-      expect(P.getVusNumberId('124037')).toEqual(1);
+      expect(P.getVusNumberId('124037')).toEqual(55);
     });
     test("...when input is '100097/182'", () => {
-      expect(P.getVusNumberId('100097/182')).toEqual(49);
+      expect(P.getVusNumberId('100097/182')).toEqual(50);
     });
     test("...when input is '123456'", () => {
       expect(P.getVusNumberId('123456')).toEqual(null);
@@ -36,19 +36,19 @@ describe("Positions module testing...\n", () => {
 
   describe("isValid method testing...", () => {
     test("...when input is valid personData object", () => {
-      expect(P.isValid({ positionNameId: 36, vusNumberId: 49, rangeId: 4, tariffCategory: 7 })).toEqual(true);
+      expect(P.isValid({ positionNameId: 36, vusNumberId: 50, rangeId: 4, tariffCategory: 7 })).toEqual(true);
     });
     test("...when input don't have positionNameId property", () => {
-      expect(P.isValid({ vusNumberId: 49, rangeId: 4, tariffCategory: 7 })).toEqual(false);
+      expect(P.isValid({ vusNumberId: 50, rangeId: 4, tariffCategory: 7 })).toEqual(false);
     });
     test("...when input don't have vusNumberId property", () => {
       expect(P.isValid({ positionNameId: 36, rangeId: 4, tariffCategory: 7 })).toEqual(false);
     });
     test("...when input don't have rangeId property", () => {
-      expect(P.isValid({ positionNameId: 36, vusNumberId: 49, tariffCategory: 7 })).toEqual(false);
+      expect(P.isValid({ positionNameId: 36, vusNumberId: 50, tariffCategory: 7 })).toEqual(false);
     });
     test("...when input don't have tariffCategory property", () => {
-      expect(P.isValid({ positionNameId: 36, vusNumberId: 49, rangeId: 4 })).toEqual(false);
+      expect(P.isValid({ positionNameId: 36, vusNumberId: 50, rangeId: 4 })).toEqual(false);
     });
     test("...when input is empty object", () => {
       expect(P.isValid({})).toEqual(false);
@@ -59,7 +59,7 @@ describe("Positions module testing...\n", () => {
   });
 
   describe("addPositionData method testing...", () => {
-    const pd = { positionNameId: 36, vusNumberId: 49, rangeId: 4, tariffCategory: 7 };
+    const pd = { positionNameId: 36, vusNumberId: 50, rangeId: 4, tariffCategory: 7 };
     test("...when personData object is not valid", () => {
       expect(P.addPositionData({})).toEqual(undefined);
     });
@@ -72,7 +72,7 @@ describe("Positions module testing...\n", () => {
   });
 
   describe("findPositionData method testing...", () => {
-    const pd = { positionNameId: 36, vusNumberId: 49, rangeId: 4, tariffCategory: 7 };
+    const pd = { positionNameId: 36, vusNumberId: 50, rangeId: 4, tariffCategory: 7 };
     test("...when personData object is not valid", () => {
       expect(P.findPositionData({})).toEqual(undefined);
     });
@@ -85,7 +85,7 @@ describe("Positions module testing...\n", () => {
   });
 
   describe("getPositionData method testing...", () => {
-    const pd = { positionNameId: 36, vusNumberId: 49, rangeId: 4, tariffCategory: 7 };
+    const pd = { positionNameId: 36, vusNumberId: 50, rangeId: 4, tariffCategory: 7 };
     test("...when no position-data element with id equals to positionId", () => {
       expect(P.getPositionData(12)).toEqual(undefined);
     });
