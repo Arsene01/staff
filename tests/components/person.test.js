@@ -264,5 +264,22 @@ describe("Person class testing...", () => {
       ]);
     });
   });
+  describe("getRange", () => {
+    test("when input has no range", () => {
+      expect(p.getRange(1)).toBeUndefined();
+    });
+    test("when input is personId 1 at '01.03.2017'", () => {
+      expect(p.getRange(1, toNumber('01.03.2017'))).toEqual('рядовой');
+    });
+    test("when input is personId 1 at '26.05.2020'", () => {
+      expect(p.getRange(1, toNumber('26.05.2020'))).toEqual('ефрейтор');
+    });
+    test("when input is personId 1 at '01.03.2017' in dative case", () => {
+      expect(p.getRange(1, toNumber('01.03.2017'), 'dative')).toEqual('рядовому');
+    });
+    test("when input is personId 1 at '26.05.2020' in dative case", () => {
+      expect(p.getRange(1, toNumber('26.05.2020'), 'dative')).toEqual('ефрейтору');
+    });
+  });
 
 });

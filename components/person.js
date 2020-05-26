@@ -1,5 +1,6 @@
 const { toNumber, toDateString } = require('./date-transform.js');
-const { changeEnding } = require('./cases.js')
+const { changeEnding } = require('./cases.js');
+const RC = require('./range.js');
 
 module.exports = class Person {
   constructor(dispatcher) {
@@ -135,6 +136,15 @@ module.exports = class Person {
       },
       'person-ranges'
     );
+  }
+  getRange(personId, date, inCase) {
+    if (!personId || !date) return;
+    const result = this
+      .dispatcher
+      .filterInSource({ relevant: { personId }}, 'person-ranges')
+      .find((r) => r.range.start <= date && date <= r.range.end);
+    if (!result) return;
+    return (new RC(this.dispatcher)).getRange(result.relevant.rangeId, inCase);
   }
   addServicePeriod(service, range) {
     if (!range.start) return;
