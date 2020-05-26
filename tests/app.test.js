@@ -978,7 +978,84 @@ describe("Application working...", () => {
         ])
       });
     });
-    describe("", () => {});
+    describe("setting initial person ranges", () => {
+      test("'подполковник' to person with id 1", () => {
+        P.raiseRange(1, 18, toNumber('26.12.2016'));
+        expect(P.getRange(1, toNumber('26.12.2016'))).toEqual('подполковник');
+      });
+      test("'майор' to person with id 2", () => {
+        P.raiseRange(2, 16, toNumber('26.12.2016'));
+        expect(P.getRange(2, toNumber('26.12.2016'))).toEqual('майор');
+      });
+      test("'капитан' to person with id 3", () => {
+        P.raiseRange(3, 14, toNumber('26.12.2016'));
+        expect(P.getRange(3, toNumber('26.12.2016'))).toEqual('капитан');
+      });
+      test("'майор' to person with id 4", () => {
+        P.raiseRange(4, 16, toNumber('26.12.2016'));
+        expect(P.getRange(4, toNumber('26.12.2016'))).toEqual('майор');
+      });
+      test("'майор' to person with id 5", () => {
+        P.raiseRange(5, 16, toNumber('26.12.2016'));
+        expect(P.getRange(5, toNumber('26.12.2016'))).toEqual('майор');
+      });
+      test("'капитан' to person with id 6", () => {
+        P.raiseRange(6, 14, toNumber('26.12.2016'));
+        expect(P.getRange(6, toNumber('26.12.2016'))).toEqual('капитан');
+      });
+      test("'сержант' to person with id 7", () => {
+        P.raiseRange(7, 4, toNumber('26.12.2016'));
+        expect(P.getRange(7, toNumber('26.12.2016'))).toEqual('сержант');
+      });
+      test("'старший лейтенант' to person with id 8", () => {
+        P.raiseRange(8, 12, toNumber('26.12.2016'));
+        expect(P.getRange(8, toNumber('26.12.2016'))).toEqual('старший лейтенант');
+      });
+      test("'лейтенант' to person with id 9", () => {
+        P.raiseRange(9, 10, toNumber('26.12.2016'));
+        expect(P.getRange(9, toNumber('26.12.2016'))).toEqual('лейтенант');
+      });
+      test("'старший сержант' to person with id 10", () => {
+        P.raiseRange(10, 5, toNumber('26.12.2016'));
+        expect(P.getRange(10, toNumber('26.12.2016'))).toEqual('старший сержант');
+      });
+      test("'прапорщик' to person with id 11", () => {
+        P.raiseRange(11, 7, toNumber('26.12.2016'));
+        expect(P.getRange(11, toNumber('26.12.2016'))).toEqual('прапорщик');
+      });
+      test("'сержант' to person with id 12", () => {
+        P.raiseRange(12, 4, toNumber('26.12.2016'));
+        expect(P.getRange(12, toNumber('26.12.2016'))).toEqual('сержант');
+      });
+      test("'сержант' to person with id 13", () => {
+        P.raiseRange(13, 4, toNumber('26.12.2016'));
+        expect(P.getRange(13, toNumber('26.12.2016'))).toEqual('сержант');
+      });
+      test("'младший сержант' to person with id 14", () => {
+        P.raiseRange(14, 3, toNumber('26.12.2016'));
+        expect(P.getRange(14, toNumber('26.12.2016'))).toEqual('младший сержант');
+      });
+      test("'рядовой' to person with id 15", () => {
+        P.raiseRange(15, 1, toNumber('26.12.2016'));
+        expect(P.getRange(15, toNumber('26.12.2016'))).toEqual('рядовой');
+      });
+      test("'рядовой' to person with id 16", () => {
+        P.raiseRange(16, 1, toNumber('26.12.2016'));
+        expect(P.getRange(16, toNumber('26.12.2016'))).toEqual('рядовой');
+      });
+      test("'рядовой' to person with id 17", () => {
+        P.raiseRange(17, 1, toNumber('26.12.2016'));
+        expect(P.getRange(17, toNumber('26.12.2016'))).toEqual('рядовой');
+      });
+      test("'лейтенант' to person with id 18", () => {
+        P.raiseRange(18, 10, toNumber('26.12.2016'));
+        expect(P.getRange(18, toNumber('26.12.2016'))).toEqual('лейтенант');
+      });
+
+    });
+    describe("concatenating range, fullname, position", () => {
+      test("when id is 1", () => {});
+    });
 
   });
 });
