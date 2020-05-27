@@ -17,3 +17,11 @@ exports.toNumber = function toNumber(dateString) {
     [31,28,31,30,31,30,31,31,30,31,30,31].reduce((a, d, i) => i < month - 1 ? a + d : a, 0);
   return beforeCurrentYearDays + leapYears + currentYearDays;
 }
+exports.today = function today() {
+  const d = new Date();
+  return [
+    (d.getDate() < 10 ? '0': '') + d.getDate(),
+    (d.getMonth() < 9 ? '0': '') + (d.getMonth() + 1),
+    d.getFullYear()
+  ].join('.');
+}
