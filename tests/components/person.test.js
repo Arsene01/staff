@@ -1,83 +1,129 @@
 const Person = require('./../../components/person.js');
 const Address = require('../../components/address.js');
 const Dispatcher = require('./../../dispatcher.js');
-const { toNumber } = require('../../components/date-transform.js')
+const { toNumber, today } = require('../../components/date-transform.js')
 
 describe("Person class testing...", () => {
   const p = new Person(new Dispatcher());
-  test("newPerson method testing...", () => {
-    p.newPerson();
-    expect(p.person).toEqual({});
+
+  describe("clear", () => {
+    test("always sets p.person to {}", () => {
+      p.clear();
+      expect(p.person).toEqual({});
+    });
   });
-  test("clear method testing...", () => {
-    p.clear();
-    expect(p.person).toEqual(null);
+  describe("setLastname", () => {
+    test("when lastname is set first time", () => {
+      p.setLastname('Кобелев');
+      expect(p.person.lastnameId).toEqual(761);
+    });
+    test("when lastname is set second time", () => {
+      p.setLastname('Осипенко');
+      expect(p.person.lastnameId).toEqual(761);
+    });
   });
-  test("setLastname method testing...", () => {
-    p.newPerson();
-    p.setLastname('Кобелев');
-    expect(p.person._lastnameId).toEqual(761);
+  describe("setFirstname", () => {
+    test("when firstname is set first time", () => {
+      p.setFirstname('Арсен');
+      expect(p.person.firstnameId).toEqual(104);
+    });
+    test("when firstname is set second time", () => {
+      p.setFirstname('Владислав');
+      expect(p.person.firstnameId).toEqual(104);
+    });
   });
-  test("setFirstname method testing...", () => {
-    p.setFirstname('Арсен');
-    expect(p.person._firstnameId).toEqual(104);
+  describe("setMiddlename", () => {
+    test("when middlename is set first time", () => {
+      p.setMiddlename('Владимирович');
+      expect(p.person.middlenameId).toEqual(103);
+    });
+    test("when middlename is set second time", () => {
+      p.setMiddlename('Владимирович');
+      expect(p.person.middlenameId).toEqual(103);
+    });
   });
-  test("setMiddlename method testing...", () => {
-    p.setMiddlename('Владимирович');
-    expect(p.person._middlenameId).toEqual(103);
+  describe("setBirthdate", () => {
+    test("when birthdate is set first time", () => {
+      p.setBirthdate('11.12.1990');
+      expect(p.person.birthdate).toEqual(33218);
+    });
+    test("when birthdate is set second time", () => {
+      p.setBirthdate('11.12.1990');
+      expect(p.person.birthdate).toEqual(33218);
+    });
   });
-  test("birthdate setter testing...", () => {
-    p.birthdate = '11.12.1990';
-    expect(p.person._birthdate).toEqual(33218);
+  describe("setGender", () => {
+    test("when gender is set first time", () => {
+      p.setGender('мужской');
+      expect(p.person.gender).toEqual('мужской');
+    });
+    test("when gender is set second time", () => {
+      p.setGender('мужской');
+      expect(p.person.gender).toEqual('мужской');
+    });
   });
+  describe("isValid", () => {
+    test("when person built completely", () => {
+      expect(p.isValid()).toBeTruthy();
+    });
+  });
+  describe("createPerson", () => {
+    test("when person built succesfully", () => {
+      expect(p.createPerson()).toBeTruthy();
+    });
+    test("after call person property is {}", () => {
+      expect(p.person).toEqual({});
+    });
+  });
+
   describe("lastname", () => {
     test("when input is not defined", () => {
-      expect(p.lastname()).toEqual('Кобелев');
+      expect(p.lastname(1, toNumber(today()))).toEqual('Кобелев');
     });
     test("when input is 'genitive'", () => {
-      expect(p.lastname('genitive')).toEqual('Кобелева');
+      expect(p.lastname(1, toNumber(today()), 'genitive')).toEqual('Кобелева');
     });
     test("when input is 'dative'", () => {
-      expect(p.lastname('dative')).toEqual('Кобелеву');
+      expect(p.lastname(1, toNumber(today()), 'dative')).toEqual('Кобелеву');
     });
   });
 
   describe("firstname", () => {
     test("when input is not defined", () => {
-      expect(p.firstname()).toEqual('Арсен');
+      expect(p.firstname(1, toNumber(today()))).toEqual('Арсен');
     });
     test("when input is 'genitive'", () => {
-      expect(p.firstname('genitive')).toEqual('Арсена');
+      expect(p.firstname(1, toNumber(today()), 'genitive')).toEqual('Арсена');
     });
     test("when input is 'dative'", () => {
-      expect(p.firstname('dative')).toEqual('Арсену');
+      expect(p.firstname(1, toNumber(today()), 'dative')).toEqual('Арсену');
     });
   });
 
   describe("middlename", () => {
-    test("when input is not defined", () => {
-      expect(p.middlename()).toEqual('Владимирович');
+    test("when case is not defined", () => {
+      expect(p.middlename(1, toNumber(today()))).toEqual('Владимирович');
     });
     test("when input is 'genitive'", () => {
-      expect(p.middlename('genitive')).toEqual('Владимировича');
+      expect(p.middlename(1, toNumber(today()), 'genitive')).toEqual('Владимировича');
     });
     test("when input is 'dative'", () => {
-      expect(p.middlename('dative')).toEqual('Владимировичу');
+      expect(p.middlename(1, toNumber(today()), 'dative')).toEqual('Владимировичу');
     });
   });
 
   describe("fullname", () => {
-    test("when input is not defined", () => {
-      expect(p.fullname()).toEqual('Кобелев Арсен Владимирович');
+    test("when case is not defined", () => {
+      expect(p.fullname(1, toNumber(today()))).toEqual('Кобелев Арсен Владимирович');
     });
     test("when input is 'genitive'", () => {
-      expect(p.fullname('genitive')).toEqual('Кобелева Арсена Владимировича');
+      expect(p.fullname(1, toNumber(today()), 'genitive')).toEqual('Кобелева Арсена Владимировича');
     });
     test("when input is 'dative'", () => {
-      expect(p.fullname('dative')).toEqual('Кобелеву Арсену Владимировичу');
+      expect(p.fullname(1, toNumber(today()), 'dative')).toEqual('Кобелеву Арсену Владимировичу');
     });
   });
-
+/*
   test("birthdate getter testing...", () => {
     expect(p.birthdate).toEqual('11.12.1990');
   });
@@ -280,6 +326,6 @@ describe("Person class testing...", () => {
     test("when input is personId 1 at '26.05.2020' in dative case", () => {
       expect(p.getRange(1, toNumber('26.05.2020'), 'dative')).toEqual('ефрейтору');
     });
-  });
+  });*/
 
 });
