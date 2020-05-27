@@ -1054,7 +1054,14 @@ describe("Application working...", () => {
 
     });
     describe("concatenating range, fullname, position", () => {
-      test("when id is 1", () => {});
+      test("when id is 1", () => {
+        const result = [
+          P.getRange(1, toNumber('01.06.2020')),
+          P.getPersonFullname(),
+          P.getPosition(1, toNumber('01.06.2020'))
+        ].join(', ')
+        expect(result).toEqual('подполковник, Кабиев Тлектес Серикович, командир 1 мотострелокового батальона войсковой части 16544');
+      });
     });
 
   });
