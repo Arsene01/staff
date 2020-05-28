@@ -76,6 +76,21 @@ describe("Person class testing...", () => {
     });
   });
 
+  describe("isValidInput", () => {
+    test("when input has personId and no date and case", () => {
+      expect(p.isInputValid(1)).toEqual(true);
+    });
+    test("when input has personId and date and no case", () => {
+      expect(p.isInputValid(1, toNumber(today()))).toEqual(true);
+    });
+    test("when input has personId and case and no date", () => {
+      expect(p.isInputValid(1, 'dative')).toEqual(true);
+    });
+    test("when input has personId, date and case", () => {
+      expect(p.isInputValid(1, toNumber('26.12.2016'), 'dative')).toEqual(true);
+    });
+  });
+
   describe("lastname", () => {
     test("when input is not defined", () => {
       expect(p.lastname(1, toNumber(today()))).toEqual('Кобелев');

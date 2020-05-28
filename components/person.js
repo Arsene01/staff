@@ -1,4 +1,4 @@
-const { toNumber, toDateString } = require('./date-transform.js');
+const { toNumber, toDateString, today } = require('./date-transform.js');
 const { changeEnding } = require('./cases.js');
 const RC = require('./range.js');
 const Department = require('./departments.js');
@@ -12,48 +12,54 @@ module.exports = class Person {
   isWithin(record, date) {
     return record.range.start <= date && date <= record.range.end;
   }
+  isInputValid(personId, date, toCase) {
+    if (!personId || typeof personId !== 'number') return false;
+    if (!date || typeof date !== 'number') return false;
+    return true;
+  }
   get id() { return this.person ? this.person.id: null; }
   get birthdate() {
     if (!this.person.birthdate) return null;
     return toDateString(this.person.birthdate);
   }
-  lastname(personId, date, toCase) {
-    if (!personId || !date || typeof date === 'string') return;
-    const lastnameId = this
+  lastname(personId, date = toNumber(today()), toCase) {
+    if (!this.isInputValid(personId, date, toCase)) return;
+    const id = this
       .filterInSource({ relevant: { personId }}, 'person-data')
       .find((r) => this.isWithin(r, date))
       .data.lastnameId;
     const endingSource = this.dispatcher.stateOf('lastname-endings');
     const result = this
-      .findInSource({ id: lastnameId }, 'lastnames')
+      .findInSource({ id }, 'lastnames')
       .value;
     return changeEnding(result, endingSource, toCase);
   }
-  firstname(personId, date, toCase) {
-    if (!personId || !date || typeof date === 'string') return;
-    const firstnameId = this
+  firstname(personId, date = toNumber(today()), toCase) {
+    if (!this.isInputValid(personId, date, toCase)) return;
+    const id = this
       .filterInSource({ relevant: { personId }}, 'person-data')
       .find((r) => this.isWithin(r, date))
       .data.firstnameId;
     const endingSource = this.dispatcher.stateOf('firstname-endings');
     const result = this
-      .findInSource({ id: firstnameId }, 'firstnames')
+      .findInSource({ id }, 'firstnames')
       .value;
     return changeEnding(result, endingSource, toCase);
   }
-  middlename(personId, date, toCase) {
-    if (!personId || !date || typeof date === 'string') return;
-    const middlenameId = this
+  middlename(personId, date = toNumber(today()), toCase) {
+    if (!this.isInputValid(personId, date, toCase)) return;
+    const id = this
       .filterInSource({ relevant: { personId }}, 'person-data')
       .find((r) => this.isWithin(r, date))
       .data.middlenameId;
     const endingSource = this.dispatcher.stateOf('middlename-endings');
     const result = this
-      .findInSource({ id: middlenameId }, 'middlenames')
+      .findInSource({ id }, 'middlenames')
       .value;
     return changeEnding(result, endingSource, toCase);
   }
-  fullname(personId, date, toCase) {
+  fullname(personId, date = toNumber(today()), toCase) {
+    if (!this.isInputValid(personId, date, toCase)) return;
     return [
       this.lastname(personId, date, toCase),
       this.firstname(personId, date, toCase),
@@ -137,10 +143,11 @@ module.exports = class Person {
   findInSource(config, dataSourceName) {
     return this.dispatcher.findInSource(config, dataSourceName);
   }
-  registerAddress(address, range = { start: this.person._birthdate }) {
-    if ((!this.id) || (!this.isValid())) return;
+  registerAddress(personId, address, range) {
+    if (!personId || !address || !range || !range.start) return;
+    if (!range.end) range.end = 2958525;
     this.registerData(
-      { personId: this.id },
+      { personId },
       { ...address },
       range,
       'address-data'
@@ -161,8 +168,8 @@ module.exports = class Person {
       'person-ranges'
     );
   }
-  getRange(personId, date, toCase) {
-    if (!personId || !date) return;
+  getRange(personId, date = toNumber(today()), toCase) {
+    if (!this.isInputValid(personId, date, toCase)) return;
     const result = this
       .dispatcher
       .filterInSource({ relevant: { personId }}, 'person-ranges')
@@ -170,8 +177,8 @@ module.exports = class Person {
     if (!result) return;
     return (new RC(this.dispatcher)).getRange(result.relevant.rangeId, toCase);
   }
-  getPersonFullname(personId, date, toCase) {
-    if (!personId || !date) return;
+  getPersonFullname(personId, date = toNumber(today()), toCase) {
+    if (!this.isInputValid(personId, date, toCase)) return;
     const result = this
       .dispatcher
       .filterInSource({ relevant: { personId }}, 'person-data')
@@ -180,14 +187,22 @@ module.exports = class Person {
     P.loadPerson({...result, _id: result.relevant.personId });
     return P.fullname(toCase);
   }
-  getPosition(personId, date, toCase) {
-    if (!personId || !date) return;
+  getPosition(personId, date = toNumber(today()), toCase) {
+    if (!this.isInputValid(personId, date, toCase)) return;
     const result = this
       .dispatcher
       .filterInSource({ relevant: { personId }}, 'position-service')
       .find((r) => r.range.start <= date && date <= r.range.end);
     if (!result) return;
-    return (new Department(this.dispatcher)).getPositionFullname(result.relevant.positionId);
+    return (new Department(this.dispatcher)).getPositionFullname(result.relevant.positionId, toCase);
+  }
+  getRangeFullnamePosition(personId, date = toNumber(today()), toCase) {
+    if (!this.isInputValid(personId, date, toCase)) return;
+    return [
+      this.getRange(personId, date, toCase),
+      this.fullname(personId, date, toCase) + ',',
+      this.getPosition(personId, date, toCase)
+    ].join(' ');
   }
   addServicePeriod(service, range) {
     if (!range.start) return;

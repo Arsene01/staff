@@ -3,8 +3,9 @@ const Address = require('../components/address.js');
 const Department = require('../components/departments.js');
 const Person = require('../components/person.js');
 const Position = require('../components/positions.js');
+const PositionService = require('../components/position-service.js');
 const Range = require('../components/range.js');
-const { toNumber } = require('../components/date-transform.js');
+const { toNumber, today } = require('../components/date-transform.js');
 
 describe("Application working...", () => {
   const D = new Dispatcher();
@@ -12,6 +13,7 @@ describe("Application working...", () => {
   const P = new Person(D);
   const p = new Position(D);
   const r = new Range(D);
+  const ps = new PositionService(D);
 
   describe("Creating state...", () => {
     describe("creating departments...", () => {
@@ -583,21 +585,20 @@ describe("Application working...", () => {
     describe("creating persons...", () => {
       test("when adding person 'Кабиев Тлектес Серикович'", () => {
         P
-          .newPerson()
           .setLastname('Кабиев')
           .setFirstname('Тлектес')
-          .setMiddlename('Серикович');
-        P.birthdate = '02.01.1983';
-
+          .setMiddlename('Серикович')
+          .setBirthdate('02.01.1983')
+          .setGender('мужской');
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 1 },
             data: {
-              _lastnameId: 687, _firstnameId: 623, _middlenameId: 486,
-              _birthdate: 30318
+              lastnameId: 687, firstnameId: 623, middlenameId: 486,
+              birthdate: 30318, gender: 'мужской'
             },
             range: { start: 30318, end: 2958525 }
           }
@@ -605,21 +606,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Сергиенко Николай Васильевич'", () => {
         P
-          .newPerson()
           .setLastname('Сергиенко')
           .setFirstname('Николай')
-          .setMiddlename('Васильевич');
-        P.birthdate = '07.12.1983';
+          .setMiddlename('Васильевич')
+          .setBirthdate('07.12.1983')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 2 },
             data: {
-              _lastnameId: 1312, _firstnameId: 471, _middlenameId: 52,
-              _birthdate: 30657
+              lastnameId: 1312, firstnameId: 471, middlenameId: 52,
+              birthdate: 30657, gender: 'мужской'
             },
             range: { start: 30657, end: 2958525 }
           }
@@ -627,21 +628,20 @@ describe("Application working...", () => {
       });
       test("when adding person 'Ерофеев Матвей Андреевич'", () => {
         P
-          .newPerson()
           .setLastname('Ерофеев')
           .setFirstname('Матвей')
-          .setMiddlename('Андреевич');
-        P.birthdate = '09.07.1989';
-
+          .setMiddlename('Андреевич')
+          .setBirthdate('09.07.1989')
+          .setGender('мужской');
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 3 },
             data: {
-              _lastnameId: 591, _firstnameId: 410, _middlenameId: 154,
-              _birthdate: 32698
+              lastnameId: 591, firstnameId: 410, middlenameId: 154,
+              birthdate: 32698, gender: 'мужской'
             },
             range: { start: 32698, end: 2958525 }
           }
@@ -649,21 +649,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Велитарский Александр Геннадьевич'", () => {
         P
-          .newPerson()
           .setLastname('Велитарский')
           .setFirstname('Александр')
-          .setMiddlename('Геннадьевич');
-        P.birthdate = '23.01.1986';
+          .setMiddlename('Геннадьевич')
+          .setBirthdate('23.01.1986')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 4 },
             data: {
-              _lastnameId: 1736, _firstnameId: 51, _middlenameId: 89,
-              _birthdate: 31435
+              lastnameId: 1736, firstnameId: 51, middlenameId: 89,
+              birthdate: 31435, gender: 'мужской'
             },
             range: { start: 31435, end: 2958525 }
           }
@@ -671,21 +671,20 @@ describe("Application working...", () => {
       });
       test("when adding person 'Боков Мустафа Курашевич'", () => {
         P
-          .newPerson()
           .setLastname('Боков')
           .setFirstname('Мустафа')
-          .setMiddlename('Курашевич');
-        P.birthdate = '23.08.1986';
-
+          .setMiddlename('Курашевич')
+          .setBirthdate('23.08.1986')
+          .setGender('мужской');
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 5 },
             data: {
-              _lastnameId: 278, _firstnameId: 442, _middlenameId: 280,
-              _birthdate: 31647
+              lastnameId: 278, firstnameId: 442, middlenameId: 280,
+              birthdate: 31647, gender: 'мужской'
             },
             range: { start: 31647, end: 2958525 }
           }
@@ -693,21 +692,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Тутуров Игорь Викторович'", () => {
         P
-          .newPerson()
           .setLastname('Тутуров')
           .setFirstname('Игорь')
-          .setMiddlename('Викторович');
-        P.birthdate = '28.02.1990';
+          .setMiddlename('Викторович')
+          .setBirthdate('28.02.1990')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 6 },
             data: {
-              _lastnameId: 1470, _firstnameId: 301, _middlenameId: 106,
-              _birthdate: 32932
+              lastnameId: 1470, firstnameId: 301, middlenameId: 106,
+              birthdate: 32932, gender: 'мужской'
             },
             range: { start: 32932, end: 2958525 }
           }
@@ -715,21 +714,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Садуллаев Юсуп Сайдмагомедович'", () => {
         P
-          .newPerson()
           .setLastname('Садуллаев')
           .setFirstname('Юсуп')
-          .setMiddlename('Сайдмагомедович');
-        P.birthdate = '17.07.1975';
+          .setMiddlename('Сайдмагомедович')
+          .setBirthdate('17.07.1975')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 7 },
             data: {
-              _lastnameId: 1249, _firstnameId: 714, _middlenameId: 718,
-              _birthdate: 27592
+              lastnameId: 1249, firstnameId: 714, middlenameId: 718,
+              birthdate: 27592, gender: 'мужской'
             },
             range: { start: 27592, end: 2958525 }
           }
@@ -737,21 +736,20 @@ describe("Application working...", () => {
       });
       test("when adding person 'Кулбахтин Илюз Филюзович'", () => {
         P
-          .newPerson()
           .setLastname('Кулбахтин')
           .setFirstname('Илюз')
-          .setMiddlename('Филюзович');
-        P.birthdate = '06.06.1993';
-
+          .setMiddlename('Филюзович')
+          .setBirthdate('06.06.1993')
+          .setGender('мужской');
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 8 },
             data: {
-              _lastnameId: 838, _firstnameId: 320, _middlenameId: 526,
-              _birthdate: 34126
+              lastnameId: 838, firstnameId: 320, middlenameId: 526,
+              birthdate: 34126, gender: 'мужской'
             },
             range: { start: 34126, end: 2958525 }
           }
@@ -759,21 +757,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Лебедев Алексей Васильевич'", () => {
         P
-          .newPerson()
           .setLastname('Лебедев')
           .setFirstname('Алексей')
-          .setMiddlename('Васильевич');
-        P.birthdate = '24.11.1995';
+          .setMiddlename('Васильевич')
+          .setBirthdate('24.11.1995')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 9 },
             data: {
-              _lastnameId: 872, _firstnameId: 52, _middlenameId: 52,
-              _birthdate: 35027
+              lastnameId: 872, firstnameId: 52, middlenameId: 52,
+              birthdate: 35027, gender: 'мужской'
             },
             range: { start: 35027, end: 2958525 }
           }
@@ -781,21 +779,20 @@ describe("Application working...", () => {
       });
       test("when adding person 'Джамалудинов Али Дибирович'", () => {
         P
-          .newPerson()
           .setLastname('Джамалудинов')
           .setFirstname('Али')
-          .setMiddlename('Дибирович');
-        P.birthdate = '22.04.1979';
-
+          .setMiddlename('Дибирович')
+          .setBirthdate('22.04.1979')
+          .setGender('мужской');
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 10 },
             data: {
-              _lastnameId: 516, _firstnameId: 53, _middlenameId: 396,
-              _birthdate: 28967
+              lastnameId: 516, firstnameId: 53, middlenameId: 396,
+              birthdate: 28967, gender: 'мужской'
             },
             range: { start: 28967, end: 2958525 }
           }
@@ -803,21 +800,20 @@ describe("Application working...", () => {
       });
       test("when adding person 'Адилов Тажидин Исаевич'", () => {
         P
-          .newPerson()
           .setLastname('Адилов')
           .setFirstname('Тажидин')
-          .setMiddlename('Исаевич');
-        P.birthdate = '15.01.1980';
-
+          .setMiddlename('Исаевич')
+          .setBirthdate('15.01.1980')
+          .setGender('мужской');
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 11 },
             data: {
-              _lastnameId: 1737, _firstnameId: 602, _middlenameId: 31,
-              _birthdate: 29235
+              lastnameId: 1737, firstnameId: 602, middlenameId: 31,
+              birthdate: 29235, gender: 'мужской'
             },
             range: { start: 29235, end: 2958525 }
           }
@@ -825,21 +821,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Малиновская Марина Жамалудиновна'", () => {
         P
-          .newPerson()
           .setLastname('Малиновская')
           .setFirstname('Марина')
-          .setMiddlename('Жамалудиновна');
-        P.birthdate = '19.10.1983';
+          .setMiddlename('Жамалудиновна')
+          .setBirthdate('19.10.1983')
+          .setGender('женский');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 12 },
             data: {
-              _lastnameId: 935, _firstnameId: 404, _middlenameId: 575,
-              _birthdate: 30608
+              lastnameId: 935, firstnameId: 404, middlenameId: 575,
+              birthdate: 30608, gender: 'женский'
             },
             range: { start: 30608, end: 2958525 }
           }
@@ -847,21 +843,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Дулин Виктор Валентинович'", () => {
         P
-          .newPerson()
           .setLastname('Дулин')
           .setFirstname('Виктор')
-          .setMiddlename('Валентинович');
-        P.birthdate = '25.01.1984';
+          .setMiddlename('Валентинович')
+          .setBirthdate('25.01.1984')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 13 },
             data: {
-              _lastnameId: 569, _firstnameId: 180, _middlenameId: 205,
-              _birthdate: 30706
+              lastnameId: 569, firstnameId: 180, middlenameId: 205,
+              birthdate: 30706, gender: 'мужской'
             },
             range: { start: 30706, end: 2958525 }
           }
@@ -869,21 +865,20 @@ describe("Application working...", () => {
       });
       test("when adding person 'Арясов Виталий Павлович'", () => {
         P
-          .newPerson()
           .setLastname('Арясов')
           .setFirstname('Виталий')
-          .setMiddlename('Павлович');
-        P.birthdate = '23.03.1981';
-
+          .setMiddlename('Павлович')
+          .setBirthdate('23.03.1981')
+          .setGender('мужской');
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 14 },
             data: {
-              _lastnameId: 145, _firstnameId: 188, _middlenameId: 171,
-              _birthdate: 29668
+              lastnameId: 145, firstnameId: 188, middlenameId: 171,
+              birthdate: 29668, gender: 'мужской'
             },
             range: { start: 29668, end: 2958525 }
           }
@@ -891,21 +886,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Сайгидулаев Ахмед Шагидханович'", () => {
         P
-          .newPerson()
           .setLastname('Сайгидулаев')
           .setFirstname('Ахмед')
-          .setMiddlename('Шагидханович');
-        P.birthdate = '05.03.1980';
+          .setMiddlename('Шагидханович')
+          .setBirthdate('05.03.1980')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 15 },
             data: {
-              _lastnameId: 1254, _firstnameId: 124, _middlenameId: 721,
-              _birthdate: 29285
+              lastnameId: 1254, firstnameId: 124, middlenameId: 721,
+              birthdate: 29285, gender: 'мужской'
             },
             range: { start: 29285, end: 2958525 }
           }
@@ -913,21 +908,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Багамаев Жамал Джамалутдинович'", () => {
         P
-          .newPerson()
           .setLastname('Багамаев')
           .setFirstname('Жамал')
-          .setMiddlename('Джамалутдинович');
-        P.birthdate = '11.06.1992';
+          .setMiddlename('Джамалутдинович')
+          .setBirthdate('11.06.1992')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 16 },
             data: {
-              _lastnameId: 1738, _firstnameId: 728, _middlenameId: 12,
-              _birthdate: 33766
+              lastnameId: 1738, firstnameId: 728, middlenameId: 12,
+              birthdate: 33766, gender: 'мужской'
             },
             range: { start: 33766, end: 2958525 }
           }
@@ -935,21 +930,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Дурдыев Анзор Лаверенович'", () => {
         P
-          .newPerson()
           .setLastname('Дурдыев')
           .setFirstname('Анзор')
-          .setMiddlename('Лаверенович');
-        P.birthdate = '27.03.1994';
+          .setMiddlename('Лаверенович')
+          .setBirthdate('27.03.1994')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 17 },
             data: {
-              _lastnameId: 571, _firstnameId: 86, _middlenameId: 919,
-              _birthdate: 34420
+              lastnameId: 571, firstnameId: 86, middlenameId: 919,
+              birthdate: 34420, gender: 'мужской'
             },
             range: { start: 34420, end: 2958525 }
           }
@@ -957,21 +952,21 @@ describe("Application working...", () => {
       });
       test("when adding person 'Охотников Александр Валерьевич'", () => {
         P
-          .newPerson()
           .setLastname('Охотников')
           .setFirstname('Александр')
-          .setMiddlename('Валерьевич');
-        P.birthdate = '20.06.1996';
+          .setMiddlename('Валерьевич')
+          .setBirthdate('20.06.1996')
+          .setGender('мужской');
 
         const state = [...D.stateOf('person-data')];
-        P.registerPerson();
+        P.createPerson();
         expect(D.stateOf('person-data')).toEqual([
           ...state,
           {
             relevant: { personId: 18 },
             data: {
-              _lastnameId: 1135, _firstnameId: 51, _middlenameId: 102,
-              _birthdate: 35236
+              lastnameId: 1135, firstnameId: 51, middlenameId: 102,
+              birthdate: 35236, gender: 'мужской'
             },
             range: { start: 35236, end: 2958525 }
           }
@@ -1053,14 +1048,14 @@ describe("Application working...", () => {
       });
 
     });
+
     describe("concatenating range, fullname, position", () => {
-      test("when id is 1", () => {
-        const result = [
-          P.getRange(1, toNumber('01.06.2020')),
-          P.getPersonFullname(),
-          P.getPosition(1, toNumber('01.06.2020'))
-        ].join(', ')
-        expect(result).toEqual('подполковник, Кабиев Тлектес Серикович, командир 1 мотострелокового батальона войсковой части 16544');
+      test("when input has no date and case", () => {
+        ps.applyPosition(1, 1, toNumber('26.12.2016'));
+        expect(P.getRangeFullnamePosition(1)).toEqual('подполковник Кабиев Тлектес Серикович, командир батальона 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has no date and case", () => {
+        expect(P.getRangeFullnamePosition(1, toNumber(today()), 'dative')).toEqual('подполковнику Кабиеву Тлектесу Сериковичу, командиру батальона 1 мотострелкового батальона войсковой части 16544');
       });
     });
 
