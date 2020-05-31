@@ -78,13 +78,13 @@ describe("Person class testing...", () => {
 
   describe("isValidInput", () => {
     test("when input has personId and no date and case", () => {
-      expect(p.isInputValid(1)).toEqual(true);
+      expect(p.isInputValid(1)).toEqual(false);
     });
     test("when input has personId and date and no case", () => {
       expect(p.isInputValid(1, toNumber(today()))).toEqual(true);
     });
     test("when input has personId and case and no date", () => {
-      expect(p.isInputValid(1, 'dative')).toEqual(true);
+      expect(p.isInputValid(1, 'dative')).toEqual(false);
     });
     test("when input has personId, date and case", () => {
       expect(p.isInputValid(1, toNumber('26.12.2016'), 'dative')).toEqual(true);
@@ -136,6 +136,77 @@ describe("Person class testing...", () => {
     });
     test("when input is 'dative'", () => {
       expect(p.fullname(1, toNumber(today()), 'dative')).toEqual('Кобелеву Арсену Владимировичу');
+    });
+  });
+  describe("setPersonalNumber", () => {
+    test("when no input", () => {
+      expect(p.setPersonalNumber()).toEqual(undefined);
+    });
+    test("when input is personId 1 and personal number with latin letters AA-123456", () => {
+      expect(p.setPersonalNumber(1, 'AA-123456')).toEqual(undefined);
+    });
+    test("when input is personId 1 and personal number АА-123456", () => {
+      p.setPersonalNumber(1, 'АА-123456');
+      expect(p.dispatcher.stateOf('personal-numbers')).toEqual([
+        {
+          relevant: { personId: 1 },
+          data: { personalNumber: 'АА-123456' },
+          range: { start: toNumber(today()), end: 2958525 }
+        }
+      ]);
+    });
+  });
+  describe("getPersonalNumber", () => {
+    test("when input is personId 1 and with no date", () => {
+      expect(p.getPersonalNumber(1)).toEqual('АА-123456');
+    });
+    test("when input is personId 1 and date '01.01.2021'", () => {
+      p.getPersonalNumber(1, toNumber('01.01.2021'));
+      expect(p.getPersonalNumber(1, toNumber('01.01.2021'))).toEqual('АА-123456');
+    });
+  });
+  describe("raiseRange", () => {
+    test("when input not valid", () => {
+      expect(p.raiseRange(1, 2)).toEqual(undefined);
+    });
+    test("when input is 'рядовой' since '26.12.2016'", () => {
+      p.raiseRange(1, 1, toNumber('26.12.2016'));
+      expect(p.dispatcher.stateOf('person-ranges')).toEqual([
+        {
+          relevant: { personId: 1, rangeId: 1 },
+          range: { start: 42730, end: 2958525 }
+        }
+      ]);
+    });
+    test("when input is 'ефрейтор' since '01.06.2017'", () => {
+      p.raiseRange(1, 2, toNumber('01.06.2017'));
+      expect(p.dispatcher.stateOf('person-ranges')).toEqual([
+        {
+          relevant: { personId: 1, rangeId: 1 },
+          range: { start: 42730, end: 42886 }
+        },
+        {
+          relevant: { personId: 1, rangeId: 2 },
+          range: { start: 42887, end: 2958525 }
+        }
+      ]);
+    });
+  });
+  describe("getRange", () => {
+    test("when input has no range", () => {
+      expect(p.getRange(1)).toEqual('ефрейтор');
+    });
+    test("when input is personId 1 at '01.03.2017'", () => {
+      expect(p.getRange(1, toNumber('01.03.2017'))).toEqual('рядовой');
+    });
+    test("when input is personId 1 at '26.05.2020'", () => {
+      expect(p.getRange(1, toNumber('26.05.2020'))).toEqual('ефрейтор');
+    });
+    test("when input is personId 1 at '01.03.2017' in dative case", () => {
+      expect(p.getRange(1, toNumber('01.03.2017'), 'dative')).toEqual('рядовому');
+    });
+    test("when input is personId 1 at '26.05.2020' in dative case", () => {
+      expect(p.getRange(1, toNumber('26.05.2020'), 'dative')).toEqual('ефрейтору');
     });
   });
 /*
@@ -298,49 +369,6 @@ describe("Person class testing...", () => {
     expect(state[0]).toEqual(result);
   });
 
-  describe("raiseRange", () => {
-    test("when input not valid", () => {
-      expect(p.raiseRange(1, 2)).toEqual(undefined);
-    });
-    test("when input is 'рядовой' since '26.12.2016'", () => {
-      p.raiseRange(1, 1, toNumber('26.12.2016'));
-      expect(p.dispatcher.stateOf('person-ranges')).toEqual([
-        {
-          relevant: { personId: 1, rangeId: 1 },
-          range: { start: 42730, end: 2958525 }
-        }
-      ]);
-    });
-    test("when input is 'ефрейтор' since '01.06.2017'", () => {
-      p.raiseRange(1, 2, toNumber('01.06.2017'));
-      expect(p.dispatcher.stateOf('person-ranges')).toEqual([
-        {
-          relevant: { personId: 1, rangeId: 1 },
-          range: { start: 42730, end: 42886 }
-        },
-        {
-          relevant: { personId: 1, rangeId: 2 },
-          range: { start: 42887, end: 2958525 }
-        }
-      ]);
-    });
-  });
-  describe("getRange", () => {
-    test("when input has no range", () => {
-      expect(p.getRange(1)).toBeUndefined();
-    });
-    test("when input is personId 1 at '01.03.2017'", () => {
-      expect(p.getRange(1, toNumber('01.03.2017'))).toEqual('рядовой');
-    });
-    test("when input is personId 1 at '26.05.2020'", () => {
-      expect(p.getRange(1, toNumber('26.05.2020'))).toEqual('ефрейтор');
-    });
-    test("when input is personId 1 at '01.03.2017' in dative case", () => {
-      expect(p.getRange(1, toNumber('01.03.2017'), 'dative')).toEqual('рядовому');
-    });
-    test("when input is personId 1 at '26.05.2020' in dative case", () => {
-      expect(p.getRange(1, toNumber('26.05.2020'), 'dative')).toEqual('ефрейтору');
-    });
-  });*/
+  */
 
 });
