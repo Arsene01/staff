@@ -1048,16 +1048,62 @@ describe("Application working...", () => {
       });
 
     });
-
     describe("concatenating range, fullname, position", () => {
       test("when input has no date and case", () => {
-        ps.applyPosition(1, 1, toNumber('26.12.2016'));
+        let i = 1; while (i <= 18) { ps.applyPosition(i, i, toNumber('26.12.2016')); i += 1; }
         expect(P.getRangeFullnamePosition(1)).toEqual('подполковник Кабиев Тлектес Серикович, командир батальона 1 мотострелкового батальона войсковой части 16544');
       });
-      test("when input has no date and case", () => {
-        expect(P.getRangeFullnamePosition(1, toNumber(today()), 'dative')).toEqual('подполковнику Кабиеву Тлектесу Сериковичу, командиру батальона 1 мотострелкового батальона войсковой части 16544');
+      test("when input has persinId 2, date and case", () => {
+        expect(P.getRangeFullnamePosition(2, toNumber(today()), 'dative')).toEqual('майору Сергиенко Николаю Васильевичу, заместителю командира батальона 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 3, date and case", () => {
+        expect(P.getRangeFullnamePosition(3, toNumber(today()), 'dative')).toEqual('капитану Ерофееву Матвею Андреевичу, заместителю командира батальона по военно-политической работе 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 4, date and case", () => {
+        expect(P.getRangeFullnamePosition(4, toNumber(today()), 'dative')).toEqual('майору Велитарскому Александру Геннадьевичу, заместителю командира батальона по вооружению 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 5, date and case", () => {
+        expect(P.getRangeFullnamePosition(5, toNumber(today()), 'dative')).toEqual('майору Бокову Мустафе Курашевичу, начальнику штаба - заместителю командира батальона штаба 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 6, date and case", () => {
+        expect(P.getRangeFullnamePosition(6, toNumber(today()), 'dative')).toEqual('капитану Тутурову Игорю Викторовичу, заместителю начальника штаба штаба 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 7, date and case", () => {
+        expect(P.getRangeFullnamePosition(7, toNumber(today()), 'dative')).toEqual('сержанту Садуллаеву Юсупу Сайдмагомедовичу, инструктору штаба 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 8, date and case", () => {
+        expect(P.getRangeFullnamePosition(8, toNumber(today()), 'dative')).toEqual('старшему лейтенанту Кулбахтину Илюзу Филюзовичу, командиру роты 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 9, date and case", () => {
+        expect(P.getRangeFullnamePosition(9, toNumber(today()), 'dative')).toEqual('лейтенанту Лебедеву Алексею Васильевичу, заместителю командира роты по военно-политической работе 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 10, date and case", () => {
+        expect(P.getRangeFullnamePosition(10, toNumber(today()), 'dative')).toEqual('старшему сержанту Джамалудинову Али Дибировичу, старшему технику 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 11, date and case", () => {
+        expect(P.getRangeFullnamePosition(11, toNumber(today()), 'dative')).toEqual('прапорщику Адилову Тажидину Исаевичу, старшине 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 12, date and case", () => {
+        expect(P.getRangeFullnamePosition(12, toNumber(today()), 'dative')).toEqual('сержанту Малиновской Марине Жамалудиновне, фельдшеру 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 13, date and case", () => {
+        expect(P.getRangeFullnamePosition(13, toNumber(today()), 'dative')).toEqual('сержанту Дулину Виктору Валентиновичу, командиру отделения 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 14, date and case", () => {
+        expect(P.getRangeFullnamePosition(14, toNumber(today()), 'dative')).toEqual('младшему сержанту Арясову Виталию Павловичу, старшему водителю 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 15, date and case", () => {
+        expect(P.getRangeFullnamePosition(15, toNumber(today()), 'dative')).toEqual('рядовому Сайгидулаеву Ахмеду Шагидхановичу, наводчику 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 16, date and case", () => {
+        expect(P.getRangeFullnamePosition(16, toNumber(today()), 'dative')).toEqual('рядовому Багамаеву Жамалу Джамалутдиновичу, радиотелефонисту 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 17, date and case", () => {
+        expect(P.getRangeFullnamePosition(17, toNumber(today()), 'dative')).toEqual('рядовому Дурдыеву Анзору Лавереновичу, оператору 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
+      });
+      test("when input has persinId 18, date and case", () => {
+        expect(P.getRangeFullnamePosition(18, toNumber(today()), 'dative')).toEqual('лейтенанту Охотникову Александру Валерьевичу, командиру взвода 1 мотострелкового взвода 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
       });
     });
-
   });
 });
