@@ -47,4 +47,17 @@ module.exports = class Payment {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
   }
+  getRangeSalaryPeriods(range, date) {
+    const result = [
+      ...this
+        .dispatcher
+        .filterInSource({ relevant: { range }}, 'range-salaries')
+        .reduce((acc, r) => {
+          if (r.range.end < date) return acc;
+          const result = {...r};
+          if (result.range.start < date) result.range.start = date;
+          return [...acc, result];
+        }, []);
+    ];
+  }
 }
