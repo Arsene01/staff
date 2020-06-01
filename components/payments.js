@@ -1,6 +1,6 @@
 const allowance = [
   { sizes: [ 100, 200 ], name: "ежемесячную надбавку к денежному довольствию в размере двух месячных окладов в соответствии с занимаемой воинской должностью, предусмотренную постановлением Правительства Российской Федерации от 29.12.2011 г. № 1174" },
-  { sizes: [ 20 ], name: "ежемесячную надбавку за особые условия военной службы в размере 20 % оклада по воинской должности (за прохождение службы на воинской должности, исполнение обязанностей по которой связано с руководством подразделением в соответствии с приказом Министра обороны Российской Федерации от 18.10.2016 г. № 675)"}
+  { sizes: [ 20 ], name: "ежемесячную надбавку за особые условия военной службы в размере 20 % оклада по воинской должности (за прохождение службы на воинской должности, исполнение обязанностей по которой связано с руководством подразделением в соответствии с приказом Министра обороны Российской Федерации от 18.10.2016 г. № 675)"},
   { sizes: [ 20 ], name: "ежемесячную надбавку за особые условия военной службы в размере 20 % оклада по воинской должности (за прохождение службы в экипажах штатной боевой (специальной) техники на гусеничном и колесном шасси)" },
   { sizes: [ 30 ], name: "при замещении должностей (старших) водителей транспорт средств категорий 'C', 'D', 'CE'" },
   { sizes: [ 50 ], name: "при замещении должностей, для которой штатом предусмотрен 1-4 тарифные разряды" },
@@ -42,14 +42,13 @@ const momentPayments = [
 //сведения о награждении государственной наградой
 //сведения из послужного списка
 //рапорт об установлении ежемесячной премии
-
+const { toDateString } = require('./date-transform.js');
 module.exports = class Payment {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
   }
   getRangeSalaryPeriods(range, date) {
-    const result = [
-      ...this
+    const result = this
         .dispatcher
         .filterInSource({ relevant: { range }}, 'range-salaries')
         .reduce((acc, r) => {
@@ -58,6 +57,31 @@ module.exports = class Payment {
           if (result.range.start < date) result.range.start = date;
           return [...acc, result];
         }, []);
-    ];
+    return [...result];
+  }
+  getPositionSalaryPeriods(tariff, date) {
+    const result = this
+        .dispatcher
+        .filterInSource({ relevant: { tariff }}, 'position-salaries')
+        .reduce((acc, r) => {
+          if (r.range.end < date) return acc;
+          const result = {...r};
+          if (result.range.start < date) result.range.start = date;
+          return [...acc, result];
+        }, []);
+    return [...result];
+  }
+  salaryPeriodToString(period) {
+    return [
+      'С ',
+      toDateString(period.range.start),
+      ' г. установить оклад по ',
+      period.relevant.range ? 'воинскому званию' : '',
+      period.relevant.tariff ? 'воинской должности' : '',
+      ' в размере ',
+      period.data.salary,
+      ' руб. в месяц',
+      period.relevant.tariff ? ` (${period.relevant.tariff} тарифный разряд).` : '.'
+    ].join('');
   }
 }
