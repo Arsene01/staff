@@ -211,7 +211,7 @@ module.exports = class Person {
       .filterInSource({ relevant: {personId }}, 'personal-numbers')
       .find((r) => this.isWithin(r, date))
       .data.personalNumber
-    )
+    );
   }
   addServicePeriod(service, range) {
     if (!range.start) return;
@@ -225,6 +225,7 @@ module.exports = class Person {
       'service'
     );
   }
+  //in design stage
   getAppointmentOrderText({
     personId,
     positionId,
