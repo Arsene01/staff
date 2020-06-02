@@ -47,10 +47,10 @@ module.exports = class Payment {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
   }
-  getRangeSalaryPeriods(range, date) {
+  getSalaryPeriods(property, value, date, dataSource) {
     const result = this
         .dispatcher
-        .filterInSource({ relevant: { range }}, 'range-salaries')
+        .filterInSource({ relevant: { [property]: value }}, dataSource)
         .reduce((acc, r) => {
           if (r.range.end < date) return acc;
           const result = {...r};
@@ -59,17 +59,11 @@ module.exports = class Payment {
         }, []);
     return [...result];
   }
+  getRangeSalaryPeriods(range, date) {
+    return this.getSalaryPeriods('range', range, date, 'range-salaries');
+  }
   getPositionSalaryPeriods(tariff, date) {
-    const result = this
-        .dispatcher
-        .filterInSource({ relevant: { tariff }}, 'position-salaries')
-        .reduce((acc, r) => {
-          if (r.range.end < date) return acc;
-          const result = {...r};
-          if (result.range.start < date) result.range.start = date;
-          return [...acc, result];
-        }, []);
-    return [...result];
+    return this.getSalaryPeriods('tariff', tariff, date, 'position-salaries');
   }
   salaryPeriodToString(period) {
     return [
@@ -83,5 +77,5 @@ module.exports = class Payment {
       ' руб. в месяц',
       period.relevant.tariff ? ` (${period.relevant.tariff} тарифный разряд).` : '.'
     ].join('');
-  }
+  }  
 }
