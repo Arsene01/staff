@@ -6,36 +6,49 @@ module.exports = class Institution {
     this.clear();
   }
   clear() { this.institution = null; this.institution = {}; }
-  setName(name) {
-    if (this.institution.name) return this;
-    if (['nominative', 'dative', 'genitive', 'accusative'].every((c) =>  name[c] ? true: false)) {
-      this.institution.name = name;
+  setPropertyToInstitution(property, value) {
+    if (this.institution[property]) return this;
+    if (['nominative', 'dative', 'genitive', 'accusative'].every((c) =>  value[c] ? true: false)) {
+      this.institution[property] = value;
     }
     return this;
+  }
+  getIdOf(value, source) {
+    const result = this.dispatcher.findInSource(value, source);
+    return result ? result.id : this.dispatcher.stateOf(source).length + 1;
+  }
+  setName(name) {
+    return this.setPropertyToInstitution('name', name);
   }
   setType(type) {
-    if (this.institution.type) return this;
-    if (['nominative', 'dative', 'genitive', 'accusative'].every((c) =>  type[c] ? true: false)) {
-      this.institution.type = type;
-    }
-    return this;
-  }
-  setHeadPosition(headPosition) {
-    if (this.institution.headPosition) return this;
-    if (['nominative', 'dative', 'genitive', 'accusative'].every((c) =>  headPosition[c] ? true: false)) {
-      this.institution.headPosition = headPosition;
-    }
-    return this;
-  }
-  setHeadName(headName) {
-    if (this.institution.headName) return this;
-    if (['lastname', 'firstname', 'middlename'].every((n) =>  headName[n] ? true: false)) {
-      this.institution.headName = headName;
-    }
-    return this;
+    return this.setPropertyToInstitution('type', type);
   }
   setCallSign(callSign) {
-    if (!this.institution.callSign) return this.institution.callSign = callSign;
+    if (!this.institution.callSign) this.institution.callSign = callSign;
     return this;
+  }
+  createInstitution(start = toNumber(today())) {
+    return {
+      relevant: {
+        institutionId: this.dispatcher.stateOf('institutions').length + 1
+      },
+      data: {
+        nameId: this.getIdOf(this.getIdOf(this.institution.name, 'institution-names')),
+        typeId: this.getIdOf(this.institution.type, 'institution-types')
+      },
+      range: { start, end: 2958525 }
+    };
+  }
+  setAddressTo(institutionId, address, start) {
+    if (!institutionId || !address || !start) return;
+    if (!range.end) range.end = 2958525;
+    this.dispatcher.add(
+      {
+        relevant: { institutionId },
+        data: {...address},
+        range: { start, end: 2958525 }
+      },
+      'address-data'
+    );
   }
 }
