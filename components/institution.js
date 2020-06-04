@@ -15,7 +15,14 @@ module.exports = class Institution {
   }
   getIdOf(value, source) {
     const result = this.dispatcher.findInSource(value, source);
-    return result ? result.id : this.dispatcher.stateOf(source).length + 1;
+    if (!result) this.dispatcher.add(
+      {
+        ...value,
+        id: this.dispatcher.stateOf(source).length + 1
+      },
+      source
+    );
+    return result ? result.id : this.dispatcher.stateOf(source).length;
   }
   setName(name) {
     return this.setPropertyToInstitution('name', name);
@@ -27,21 +34,28 @@ module.exports = class Institution {
     if (!this.institution.callSign) this.institution.callSign = callSign;
     return this;
   }
-  createInstitution(start = toNumber(today())) {
-    return {
-      relevant: {
-        institutionId: this.dispatcher.stateOf('institutions').length + 1
+  createInstitutionData(start = toNumber(today())) {
+    this.dispatcher.add(
+      { id: this.dispatcher.stateOf('institutions').length + 1},
+      'institutions'
+    );
+    this.dispatcher.add(
+      {
+        relevant: {
+          institutionId: this.dispatcher.stateOf('institutions').length
+        },
+        data: {
+          nameId: this.getIdOf(this.institution.name, 'institution-names'),
+          typeId: this.getIdOf(this.institution.type, 'institution-types')
+        },
+        range: { start, end: 2958525 }
       },
-      data: {
-        nameId: this.getIdOf(this.getIdOf(this.institution.name, 'institution-names')),
-        typeId: this.getIdOf(this.institution.type, 'institution-types')
-      },
-      range: { start, end: 2958525 }
-    };
+      'institution-data'
+    );
+    this.clear();
   }
   setAddressTo(institutionId, address, start) {
     if (!institutionId || !address || !start) return;
-    if (!range.end) range.end = 2958525;
     this.dispatcher.add(
       {
         relevant: { institutionId },
