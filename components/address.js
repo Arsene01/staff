@@ -79,10 +79,11 @@ module.exports = class Address {
     return result ? result.id : null;
   }
   registerAddress(
-    { region, area, city, locality, street, house, building, apartment }
+    { zipcode, region, area, city, locality, street, house, building, apartment }
   ) {
+    if (!zipcode) return null;
     if (!this.regionId(region)) return null;
-    const result = { regionId: this.regionId(region) };
+    const result = { zipcode, regionId: this.regionId(region) };
     if (this.areaId(area)) result.areaId = this.areaId(area);
     if (this.cityId(city)) result.cityId = this.cityId(city);
     if (this.localityId(locality)) result.localityId = this.localityId(locality);
