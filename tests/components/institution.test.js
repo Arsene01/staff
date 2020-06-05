@@ -149,4 +149,27 @@ describe("Institution class testing...", () => {
       }]);
     });
   });
+  describe("getName", () => {
+    const name = {
+      nominative: 'Управление финансового обеспечения Министерства обороны Российской Федерации по Республике Северная Осетия-Алания',
+      accusative: 'Управление финансового обеспечения Министерства обороны Российской Федерации по Республике Северная Осетия-Алания',
+      dative: 'Управлению финансового обеспечения Министерства обороны Российской Федерации по Республике Северная Осетия-Алания',
+      genitive: 'Управления финансового обеспечения Министерства обороны Российской Федерации по Республике Северная Осетия-Алания'
+    };
+    test("in nominative", () => {
+      expect(i.getName(1, toNumber('26.12.2016'))).toEqual(name.nominative);
+    });
+    test("in nominative", () => {
+      expect(i.getName(1, toNumber('26.12.2016'), 'nominative')).toEqual(name.nominative);
+    });
+    test("in accusative", () => {
+      expect(i.getName(1, toNumber('26.12.2016'), 'accusative')).toEqual(name.accusative);
+    });
+    test("in dative", () => {
+      expect(i.getName(1, toNumber('26.12.2016'), 'dative')).toEqual(name.dative);
+    });
+    test("in genitive", () => {
+      expect(i.getName(1, toNumber('26.12.2016'), 'genitive')).toEqual(name.genitive);
+    });
+  });
 });

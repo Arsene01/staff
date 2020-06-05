@@ -1,4 +1,5 @@
 const { toNumber, toDateString, today } = require('./date-transform.js');
+const { getCase } = require('./cases.js');
 
 module.exports = class Institution {
   constructor(dispatcher) {
@@ -23,6 +24,38 @@ module.exports = class Institution {
       source
     );
     return result ? result.id : this.dispatcher.stateOf(source).length;
+  }
+  isWithin(record, date) {
+    return record.range.start <= date && date <= record.range.end;
+  }
+  getData(id, date = toNumber(today())) {
+    if (!id || typeof id !== 'number' || typeof date !== 'number') return;
+    return (
+      this
+        .dispatcher
+        .filterInSource({ relevant: { institutionId: id }}, 'institution-data')
+        .find((r) => this.isWithin(r, date))
+      );
+  }
+  getName(institutionId, date = toNumber(today()), toCase) {
+    if (!this.getData(institutionId, date)) return;
+    const result = this.dispatcher.findInSource(
+      {
+        id: this.getData(institutionId, date).data.nameId
+      },
+      'institution-names'
+    );
+    return result ? result[getCase(toCase)] : null;
+  }
+  getType(institutionId, date = toNumber(today()), toCase) {
+    if (!this.getData(institutionId, date)) return;
+    const result = this.dispatcher.findInSource(
+      {
+        id: this.getData(institutionId, date).data.typeId
+      },
+      'institution-types'
+    );
+    return result ? result[getCase(toCase)] : null;
   }
   setName(name) {
     return this.setPropertyToInstitution('name', name);
