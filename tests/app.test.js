@@ -582,6 +582,8 @@ describe("Application working...", () => {
         expect(d.getPositionFullname(18)).toEqual('командир взвода 1 мотострелкового взвода 1 мотострелковой роты 1 мотострелкового батальона войсковой части 16544');
       });
     });
+  });
+  describe("Filling data...", () => {
     describe("creating persons...", () => {
       test("when adding person 'Кабиев Тлектес Серикович'", () => {
         P
