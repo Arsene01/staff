@@ -1,6 +1,7 @@
 const Dispatcher = require('../dispatcher.js');
 const Address = require('../components/address.js');
 const Department = require('../components/departments.js');
+const Institution = require('../components/institution.js');
 const Person = require('../components/person.js');
 const Position = require('../components/positions.js');
 const PositionService = require('../components/position-service.js');
@@ -8,14 +9,42 @@ const Range = require('../components/range.js');
 const { toNumber, today } = require('../components/date-transform.js');
 
 describe("Application working...", () => {
-  const D = new Dispatcher();
-  const d = new Department(D);
-  const P = new Person(D);
-  const p = new Position(D);
-  const r = new Range(D);
-  const ps = new PositionService(D);
+  const D = new Dispatcher(),
+        a = new Address({}, D),
+        d = new Department(D),
+        i = new Institution(D),
+        P = new Person(D),
+        p = new Position(D),
+        r = new Range(D),
+        ps = new PositionService(D);
 
   describe("Creating state...", () => {
+    describe("creating military institution", () => {
+      test("creating 'войсковая часть 16544'", () => {
+        i.setName({nominative: '16544', dative: '16544', accusative: '16544', genitive: '16544'});
+        i.setType({nominative: 'войсковая часть', dative: 'войсковой части', accusative: 'войсковую часть', genitive: 'войсковой части'});
+        i.createInstitutionData(toNumber('26.12.2016'));
+        expect(D.stateOf('institution-data')).toEqual([{
+          relevant: { institutionId: 1 },
+          data: { nameId: 1, typeId: 1 },
+          range: { start: 42730, end: 2958525 }
+        }]);
+      });
+      test("setting address for 'войсковая часть 16544'", () => {
+        const address = a.registerAddress({
+          zipcode: 366123,
+          region: 'Чеченская Республика',
+          area: 'Наурский район',
+          locality: 'Калиновская'
+        });
+        i.setAddressTo(1, address, toNumber('26.12.2016'));
+        expect(D.stateOf('address-data')).toEqual([{
+          relevant: { institutionId: 1 },
+          data: { zipcode: 366123, regionId: 24, areaId: 391, localityId: 8519 },
+          range: { start: 42730, end: 2958525 }
+        }]);
+      });
+    });
     describe("creating departments...", () => {
       test("when initializing state is empty", () => {
         expect(D.stateOf('departments')).toEqual([]);
