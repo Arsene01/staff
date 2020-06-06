@@ -8,13 +8,13 @@ const D = new Dispatcher();
 const i = new Institution(D);
 const a = new Address({}, D);
 describe("Institution class testing...", () => {
-  describe("clear", () => {
+  describe("Institution.clear()", () => {
     test("always sets i.institution to {}", () => {
       i.clear();
       expect(i.institution).toEqual({});
     });
   });
-  describe("setName", () => {
+  describe("Institution.setName()", () => {
     test("when input has no 'nominative' property", () => {
       const name = {
         accusative: 'Управление финансового обеспечения Министерства обороны Российской Федерации по Республике Северная Осетия-Алания',
@@ -62,7 +62,7 @@ describe("Institution class testing...", () => {
       expect(i.institution.name).toEqual({ ...name });
     });
   });
-  describe("setType", () => {
+  describe("Institution.setType()", () => {
     test("when input has no 'nominative' property", () => {
       const type = {
         accusative: 'Федеральное казенное учреждение',
@@ -110,7 +110,7 @@ describe("Institution class testing...", () => {
       expect(i.institution.type).toEqual({ ...type });
     });
   });
-  describe("createInstitutionData", () => {
+  describe("Institution.createInstitutionData()", () => {
     test("when institution property built", () => {
       i.createInstitutionData(toNumber('26.12.2016'));
       expect(i.dispatcher.stateOf('institution-data')).toEqual([{
@@ -122,8 +122,36 @@ describe("Institution class testing...", () => {
     test("after institution data creation institution property must be clear", () => {
       expect(i.institution).toEqual({});
     });
+    test("create another institution", () => {
+      i.setName({
+        nominative: '16544',
+        accusative: '16544',
+        dative: '16544',
+        genitive: '16544'
+      });
+      i.setType({
+        nominative: 'войсковая часть',
+        accusative: 'войсковую часть',
+        dative: 'войсковой части',
+        genitive: 'войсковой части'
+      });
+      i.createInstitutionData(toNumber('26.12.2016'));
+
+      expect(i.dispatcher.stateOf('institution-data')).toEqual([
+        {
+          relevant: { institutionId: 1 },
+          data: { nameId: 1, typeId: 1},
+          range: { start: 42730, end: 2958525}
+        },
+        {
+          relevant: { institutionId: 2 },
+          data: { nameId: 2, typeId: 2},
+          range: { start: 42730, end: 2958525}
+        }
+      ]);
+    });
   });
-  describe("setAddressTo", () => {
+  describe("Institution.setAddressTo", () => {
     test("check initializing", () => {
       expect(D.stateOf('address-data')).toEqual([]);
     });
@@ -202,7 +230,7 @@ describe("Institution class testing...", () => {
       );
     });
     test("when institution is not found", () => {
-      expect(i.getAddress(2, toNumber('26.12.2016'))).toEqual('');
+      expect(i.getAddress(3, toNumber('26.12.2016'))).toEqual('');
     });
   });
 });
