@@ -53,11 +53,12 @@ describe("Application working...", () => {
         d.addDepartmentToState({
           departmentNameId: d.getDepartmentNameId('мотострелковый батальон'),
           number: 1,
+          institutionId: 1,
           start: toNumber('26.12.2016')
         });
         expect(D.stateOf('departments')).toEqual([
           {
-            relevant: { departmentId: null },
+            relevant: { institutionId: 1 },
             data: { id: 1, item: 1, departmentNameId: 62, number: 1 },
             range: { start: 42730, end: 2958525 }
           }
@@ -71,7 +72,7 @@ describe("Application working...", () => {
         });
         expect(D.stateOf('departments')).toEqual([
           {
-            relevant: { departmentId: null },
+            relevant: { institutionId: 1 },
             data: { id: 1, item: 1, departmentNameId: 62, number: 1 },
             range: { start: 42730, end: 2958525 }
           },
@@ -91,7 +92,7 @@ describe("Application working...", () => {
         });
         expect(D.stateOf('departments')).toEqual([
           {
-            relevant: { departmentId: null },
+            relevant: { institutionId: 1 },
             data: { id: 1, item: 1, departmentNameId: 62, number: 1 },
             range: { start: 42730, end: 2958525 }
           },
@@ -116,7 +117,7 @@ describe("Application working...", () => {
         });
         expect(D.stateOf('departments')).toEqual([
           {
-            relevant: { departmentId: null },
+            relevant: { institutionId: 1 },
             data: { id: 1, item: 1, departmentNameId: 62, number: 1 },
             range: { start: 42730, end: 2958525 }
           },
