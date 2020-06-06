@@ -20,6 +20,7 @@ describe("Address class testing...", () => {
       const address = new Address({}, new Dispatcher());
       const result = address.registerAddress(
         {
+          zipcode: 385018,
           region: 'Республика Адыгея',
           city: 'Майкоп',
           street: 'Юннатов',
@@ -28,6 +29,7 @@ describe("Address class testing...", () => {
         }
       );
       expect(result).toEqual({
+        zipcode: 385018,
         regionId: 4,
         cityId: 218,
         streetId: 152721,
@@ -39,6 +41,7 @@ describe("Address class testing...", () => {
       const address = new Address({}, new Dispatcher());
       const result = address.registerAddress(
         {
+          zipcode: 366123,
           region: 'Чеченская Республика',
           area: 'Наурский район',
           locality: 'Калиновская',
@@ -47,6 +50,7 @@ describe("Address class testing...", () => {
         }
       );
       expect(result).toEqual({
+        zipcode: 366123,
         regionId: 24,
         areaId: 391,
         localityId: 8519,
