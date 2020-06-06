@@ -172,4 +172,27 @@ describe("Institution class testing...", () => {
       expect(i.getName(1, toNumber('26.12.2016'), 'genitive')).toEqual(name.genitive);
     });
   });
+  describe("getType", () => {
+    const type = {
+      nominative: 'Федеральное казенное учреждение',
+      accusative: 'Федеральное казенное учреждение',
+      dative: 'Федеральному казенному учреждению',
+      genitive: 'Федерального казенного учреждения'
+    };
+    test("in nominative", () => {
+      expect(i.getType(1, toNumber('26.12.2016'))).toEqual(type.nominative);
+    });
+    test("in nominative", () => {
+      expect(i.getType(1, toNumber('26.12.2016'), 'nominative')).toEqual(type.nominative);
+    });
+    test("in accusative", () => {
+      expect(i.getType(1, toNumber('26.12.2016'), 'accusative')).toEqual(type.accusative);
+    });
+    test("in dative", () => {
+      expect(i.getType(1, toNumber('26.12.2016'), 'dative')).toEqual(type.dative);
+    });
+    test("in genitive", () => {
+      expect(i.getType(1, toNumber('26.12.2016'), 'genitive')).toEqual(type.genitive);
+    });
+  });
 });
