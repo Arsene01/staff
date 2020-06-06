@@ -1,4 +1,6 @@
 const { getCase } = require('./cases.js');
+const { toNumber, today } = require('./date-transform.js');
+const Institution = require('./institution.js');
 const Position = require('./positions.js');
 
 module.exports = class Department {
@@ -62,17 +64,24 @@ module.exports = class Department {
         .findInSource({ nominative: departmentName}, 'department-names');
     return result ? result.id : null;
   }
-  getDepartment(departmentId) {
+  getDepartment(departmentId, date = toNumber(today())) {
     const result = [];
     let d = this.dispatcher.findInSource({ data: { id: departmentId }}, 'departments');
-    while (d) {
+    while (d && !d.relevant.institutionId) {
       if (d.data.number) result.push(d.data.number);
       result.push(this.getDepartmentName(d.data.departmentNameId, 'genitive'));
       d = this
           .dispatcher
           .findInSource({ data: { id: d.relevant.departmentId }}, 'departments');
     }
-    result.push('войсковой части 16544');
+    if (d) {
+      const institutionName = [
+        new Institution(this.dispatcher).getType(d.relevant.institutionId, date, 'genitive'),
+        new Institution(this.dispatcher).getName(d.relevant.institutionId, date, 'genitive')
+      ].join(' ');
+      result.push(institutionName);
+    }
+
     return result.join(' ');
   }
 
@@ -81,7 +90,7 @@ module.exports = class Department {
     return p ? [
       (new Position(this.dispatcher)).getPosition(p.data.positionDataId, inCase),
       this.getDepartment(p.relevant.departmentId)
-    ].join(' ') : null;
+    ].filter((p) => p ? true : false).join(' ') : null;
   }
 
 }

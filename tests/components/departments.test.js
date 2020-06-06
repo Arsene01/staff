@@ -145,10 +145,10 @@ describe("Departments module testing...\n", () => {
 
   describe("getDepartment method testing...", () => {
     test("...when input is null", () => {
-      expect(D.getDepartment(null)).toEqual('войсковой части 16544');
+      expect(D.getDepartment(null)).toEqual('');
     });
     test("...when input is 1", () => {
-      expect(D.getDepartment(1)).toEqual('1 мотострелкового батальона войсковой части 16544');
+      expect(D.getDepartment(1)).toEqual('1 мотострелкового батальона');
     });
   });
 
@@ -164,14 +164,14 @@ describe("Departments module testing...\n", () => {
         tariffCategory: 2,
         rangeId: 2
       });
-      expect(D.getPositionFullname(1)).toEqual('водитель войсковой части 16544');
+      expect(D.getPositionFullname(1)).toEqual('водитель');
     });
     test("...when input is 5 for department with id equals 1", () => {
       D.addPositionToState({ ...p1, superDepartmentId: 1 });
-      expect(D.getPositionFullname(5)).toEqual('водитель 1 мотострелкового батальона войсковой части 16544');
+      expect(D.getPositionFullname(5)).toEqual('водитель 1 мотострелкового батальона');
     });
     test("...when input is 5 and set dative case for department with id equals 1", () => {
-      expect(D.getPositionFullname(5, 'dative')).toEqual('водителю 1 мотострелкового батальона войсковой части 16544');
+      expect(D.getPositionFullname(5, 'dative')).toEqual('водителю 1 мотострелкового батальона');
     });
   });
 });
