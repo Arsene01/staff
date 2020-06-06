@@ -24,10 +24,15 @@ module.exports = class Department {
     departmentNameId,
     number,
     superDepartmentId,
+    institutionId,
     start
   }) {
     if (!start) return;
-    const relevant = { departmentId: superDepartmentId ? superDepartmentId : null };
+    const relevant = {};
+    if (institutionId) relevant.institutionId = institutionId;
+    else {
+      relevant.departmentId = superDepartmentId ? superDepartmentId : null;
+    }
     const data = { departmentNameId, id: this.dispatcher.stateOf('departments').length + 1 };
     data.item = this.calculateItemFor(superDepartmentId);
     if (number) data.number = number;
@@ -67,9 +72,10 @@ module.exports = class Department {
   getDepartment(departmentId, date = toNumber(today())) {
     const result = [];
     let d = this.dispatcher.findInSource({ data: { id: departmentId }}, 'departments');
-    while (d && !d.relevant.institutionId) {
+    while (d) {
       if (d.data.number) result.push(d.data.number);
       result.push(this.getDepartmentName(d.data.departmentNameId, 'genitive'));
+      if (d.relevant.institutionId) break;
       d = this
           .dispatcher
           .findInSource({ data: { id: d.relevant.departmentId }}, 'departments');
