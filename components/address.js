@@ -46,8 +46,12 @@ module.exports = class Address {
     if (!this.registration.apartment) return null;
     return `кв. ${this.registration.apartment}`;
   }
+  get zipcode() {
+    return this.registration.zipcode ? this.registration.zipcode : null;
+  }
   get address() {
     return [
+      this.zipcode,
       this.region ? this.region.name : null,
       this.area ? this.area.name : null,
       this.city ? this.city.name : null,
