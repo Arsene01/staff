@@ -195,4 +195,14 @@ describe("Institution class testing...", () => {
       expect(i.getType(1, toNumber('26.12.2016'), 'genitive')).toEqual(type.genitive);
     });
   });
+  describe("getAddress", () => {
+    test("when institution is found", () => {
+      expect(i.getAddress(1, toNumber('26.12.2016'))).toEqual(
+        '362006, Республика Северная Осетия-Алания, Владикавказ, Коста, д. 32/34'
+      );
+    });
+    test("when institution is not found", () => {
+      expect(i.getAddress(2, toNumber('26.12.2016'))).toEqual('');
+    });
+  });
 });

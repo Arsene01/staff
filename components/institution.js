@@ -1,3 +1,4 @@
+const Address = require('./address.js');
 const { toNumber, toDateString, today } = require('./date-transform.js');
 const { getCase } = require('./cases.js');
 
@@ -40,9 +41,7 @@ module.exports = class Institution {
   getName(institutionId, date = toNumber(today()), toCase) {
     if (!this.getData(institutionId, date)) return;
     const result = this.dispatcher.findInSource(
-      {
-        id: this.getData(institutionId, date).data.nameId
-      },
+      { id: this.getData(institutionId, date).data.nameId },
       'institution-names'
     );
     return result ? result[getCase(toCase)] : null;
@@ -50,9 +49,7 @@ module.exports = class Institution {
   getType(institutionId, date = toNumber(today()), toCase) {
     if (!this.getData(institutionId, date)) return;
     const result = this.dispatcher.findInSource(
-      {
-        id: this.getData(institutionId, date).data.typeId
-      },
+      { id: this.getData(institutionId, date).data.typeId },
       'institution-types'
     );
     return result ? result[getCase(toCase)] : null;
@@ -97,5 +94,12 @@ module.exports = class Institution {
       },
       'address-data'
     );
+  }
+  getAddress(institutionId, date = toNumber(today())) {
+    const data = this.dispatcher
+      .filterInSource({ relevant: { institutionId }}, 'address-data')
+      .find((r) => this.isWithin(r, date));
+    if (!data) return '';
+    return new Address({...data.data}, this.dispatcher).address;
   }
 }
