@@ -54,6 +54,18 @@ module.exports = class Institution {
     );
     return result ? result[getCase(toCase)] : null;
   }
+  getInstitutionIdBy(positionId) {
+    let d = this.dispatcher
+      .findInSource({ data: { id: positionId }}, 'positions');
+    do {
+      if (d.relevant.institutionId) return d.relevant.institutionId;
+      d = this.dispatcher
+        .findInSource(
+          { relevant: { departmentId: d.relevant.departmentId}},
+          'departments'
+        );
+    } while (d);
+  }
   setName(name) {
     return this.setPropertyToInstitution('name', name);
   }
