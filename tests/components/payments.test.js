@@ -1,13 +1,23 @@
 const Payments = require('../../components/payments.js');
+const Address = require('../../components/address.js');
+const Institution = require('../../components/institution.js');
+const Department = require('../../components/departments.js');
 const Person = require('../../components/person.js');
+const Position = require('../../components/positions.js');
+const PositionService = require('../../components/position-service.js');
 const Range = require('../../components/range.js');
 const Dispatcher = require('../../dispatcher.js');
 const { toNumber, today } = require('../../components/date-transform.js');
 
-const d = new Dispatcher();
-const r = new Range(d);
-const p = new Payments(d);
-const P = new Person(d);
+const D = new Dispatcher();
+const a = new Address({}, D);
+const d = new Department(D)
+const r = new Range(D);
+const p = new Payments(D);
+const P = new Person(D);
+const pos = new Position(D);
+const ps = new PositionService(D);
+const i = new Institution(D);
 
 describe("Payments class", () => {
   describe("getRangeSalaryPeriods", () => {
@@ -98,6 +108,81 @@ describe("Payments class", () => {
       expect(p.salaryPeriodToString(period)).toEqual(
         'С 01.10.2019 г. установить оклад по воинской должности в размере 26034 руб. в месяц (18 тарифный разряд).'
       );
+    });
+  });
+  describe("checking rights for allowance 1174", () => {
+    test("creating 'войсковая часть 16544'", () => {
+      i.setName({nominative: '16544', dative: '16544', accusative: '16544', genitive: '16544'});
+      i.setType({nominative: 'войсковая часть', dative: 'войсковой части', accusative: 'войсковую часть', genitive: 'войсковой части'});
+      i.createInstitutionData(toNumber('26.12.2016'));
+      expect(D.stateOf('institution-data')).toEqual([{
+        relevant: { institutionId: 1 },
+        data: { nameId: 1, typeId: 1 },
+        range: { start: 42730, end: 2958525 }
+      }]);
+    });
+    test("setting address for 'войсковая часть 16544'", () => {
+      const address = a.registerAddress({
+        zipcode: 366123,
+        region: 'Чеченская Республика',
+        area: 'Наурский район',
+        locality: 'Калиновская'
+      });
+      i.setAddressTo(1, address, toNumber('26.12.2016'));
+      expect(D.stateOf('address-data')).toEqual([{
+        relevant: { institutionId: 1 },
+        data: { zipcode: 366123, regionId: 24, areaId: 391, localityId: 8519 },
+        range: { start: 42730, end: 2958525 }
+      }]);
+    });
+    test("add department to 'войсковая часть 16544'", () => {
+      d.addDepartmentToState({
+        departmentNameId: d.getDepartmentNameId('мотострелковый батальон'),
+        number: 1,
+        institutionId: 1,
+        start: toNumber('26.12.2016')
+      });
+      expect(D.stateOf('departments')).toEqual([
+        {
+          relevant: { institutionId: 1 },
+          data: { id: 1, item: 1, departmentNameId: 62, number: 1 },
+          range: { start: 42730, end: 2958525 }
+        }
+      ]);
+    });
+    test("add position to '1 мотострелковый батальон'", () => {
+      const data = pos.addPositionData({
+        positionNameId: pos.getPositionNameId('командир батальона'),
+        vusNumberId: pos.getVusNumberId('0210003'),
+        tariffCategory: 18,
+        rangeId: r.rangeIdOf('подполковник')
+      });
+      d.addPositionToState({
+        positionDataId: data.id,
+        superDepartmentId: 1,
+        start: toNumber('26.12.2016')
+      });
+
+      expect(D.stateOf('positions')).toEqual([
+        {
+          relevant: { departmentId: 1 },
+          data: { id: 1, item: 1, positionDataId: 1 },
+          range: { start: 42730, end: 2958525 }
+        }
+      ]);
+    });
+    test("set person to position", () => {
+      ps.applyPosition(1, 1, toNumber('26.12.2016'));
+
+      expect(D.stateOf('position-service')).toEqual([
+        {
+          relevant: { positionId: 1, personId: 1 },
+          range: { start: 42730, end: 2958525 }
+        }
+      ]);
+    });
+    test("get1174AllowanceRights() returns 100", () => {
+      expect(p.get1174AllowanceRights(1, toNumber('26.12.2016'))).toEqual(100);
     });
   });
 });

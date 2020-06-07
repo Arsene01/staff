@@ -43,6 +43,8 @@ const momentPayments = [
 //сведения из послужного списка
 //рапорт об установлении ежемесячной премии
 const { toDateString } = require('./date-transform.js');
+const Institution = require('./institution.js');
+
 module.exports = class Payment {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
@@ -77,5 +79,23 @@ module.exports = class Payment {
       ' руб. в месяц',
       period.relevant.tariff ? ` (${period.relevant.tariff} тарифный разряд).` : '.'
     ].join('');
-  }  
+  }
+  get1174AllowanceRights(personId, date) {
+    const positionServiceData = this.dispatcher
+      .filterInSource({ relevant: { personId }}, 'position-service')
+      .find((r) => r.range.start <= date && date <= r.range.end);
+    if (!positionServiceData) return 'No position service data';
+    const inst = new Institution(this.dispatcher);
+    const address = inst
+      .getAddress(inst.getInstitutionIdBy(positionServiceData.relevant.positionId));
+    const isEligable = [
+      'Чеченская Республика',
+      'Республика Дагестан',
+      'Карачаево-Черкесская Республика',
+      'Кабардино-Балкарская Республика',
+      'Республика Ингушения',
+      'Республика Северная Осетия-Алания'
+    ].some((r) => address.indexOf(r) >= 0);
+    return 100;
+  }
 }
