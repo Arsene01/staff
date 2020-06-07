@@ -1,8 +1,8 @@
-const PositionService = require('../../components/position-service.js');
-const Dispatcher = require('../../dispatcher.js');
+const PositionService = require("../../components/position-service.js");
+const Dispatcher = require("../../dispatcher.js");
 
 const p = new PositionService(new Dispatcher());
-const s = p.dispatcher.getDataSource('position-service').source;
+const s = p.dispatcher.getDataSource("position-service").source;
 
 describe("PositionService class...", () => {
   describe("testing applyPosition method...", () => {
@@ -11,8 +11,8 @@ describe("PositionService class...", () => {
       expect(s.state).toEqual([
         {
           relevant: { positionId: 1, personId: 1 },
-          range: { start: 42730, end: 2958525 }
-        }
+          range: { start: 42730, end: 2958525 },
+        },
       ]);
     });
     test("when repeatly position applying attemp", () => {
@@ -20,8 +20,8 @@ describe("PositionService class...", () => {
       expect(s.state).toEqual([
         {
           relevant: { positionId: 1, personId: 1 },
-          range: { start: 42730, end: 2958525 }
-        }
+          range: { start: 42730, end: 2958525 },
+        },
       ]);
     });
     test("when position has freed one day before", () => {
@@ -29,18 +29,17 @@ describe("PositionService class...", () => {
       expect(s.state).toEqual([
         {
           relevant: { positionId: 1, personId: 1 },
-          range: { start: 42730, end: 2958525 }
+          range: { start: 42730, end: 2958525 },
         },
         {
           relevant: { positionId: 2, personId: 2 },
-          range: { start: 43000, end: 2958525 }
-        }
+          range: { start: 43000, end: 2958525 },
+        },
       ]);
     });
   });
 
   describe("testing isPositionFree method", () => {
-
     test("when input has no range", () => {
       s.clear();
       expect(p.isPositionFree(1)).toBeUndefined();
@@ -68,8 +67,8 @@ describe("PositionService class...", () => {
       expect(s.state).toEqual([
         {
           relevant: { positionId: 1, personId: 1 },
-          range: { start: 42730, end: 43000 }
-        }
+          range: { start: 42730, end: 43000 },
+        },
       ]);
     });
     test("when input is not full", () => {
@@ -83,8 +82,8 @@ describe("PositionService class...", () => {
       expect(s.state).toEqual([
         {
           relevant: { positionId: 1, personId: 1 },
-          range: { start: 42730, end: 43000 }
-        }
+          range: { start: 42730, end: 43000 },
+        },
       ]);
     });
     test("when position is not applyed", () => {
@@ -92,8 +91,8 @@ describe("PositionService class...", () => {
       expect(s.state).toEqual([
         {
           relevant: { positionId: 1, personId: 1 },
-          range: { start: 42730, end: 43000 }
-        }
+          range: { start: 42730, end: 43000 },
+        },
       ]);
     });
     test("when position applyed", () => {
@@ -101,11 +100,9 @@ describe("PositionService class...", () => {
       expect(s.state).toEqual([
         {
           relevant: { positionId: 1, personId: 1 },
-          range: { start: 42730, end: 42730 }
-        }
+          range: { start: 42730, end: 42730 },
+        },
       ]);
     });
   });
-
-
 });

@@ -1,54 +1,71 @@
-const Position = require('../../components/positions.js');
-const Dispatcher = require('../../dispatcher.js');
+const Position = require("../../components/positions.js");
+const Dispatcher = require("../../dispatcher.js");
 
 const P = new Position(new Dispatcher());
 
 describe("Positions module testing...\n", () => {
   describe("getPositionNameId method testing...", () => {
     test("...when input is 'командир отделения'", () => {
-      expect(P.getPositionNameId('командир отделения')).toEqual(69);
+      expect(P.getPositionNameId("командир отделения")).toEqual(69);
     });
     test("...when input is 'наводчик'", () => {
-      expect(P.getPositionNameId('наводчик')).toEqual(102);
+      expect(P.getPositionNameId("наводчик")).toEqual(102);
     });
     test("...when input is 'заместитель командира взвода - командир отделения'", () => {
-      expect(P.getPositionNameId('заместитель командира взвода - командир отделения')).toEqual(36);
+      expect(
+        P.getPositionNameId("заместитель командира взвода - командир отделения")
+      ).toEqual(36);
     });
     test("...when input is 'нет такой должности'", () => {
-      expect(P.getPositionNameId('нет такой должности')).toEqual(null);
+      expect(P.getPositionNameId("нет такой должности")).toEqual(null);
     });
   });
 
   describe("getVusNumberId method testing...", () => {
     test("...when input is '837037'", () => {
-      expect(P.getVusNumberId('837037')).toEqual(62);
+      expect(P.getVusNumberId("837037")).toEqual(62);
     });
     test("...when input is '124037'", () => {
-      expect(P.getVusNumberId('124037')).toEqual(55);
+      expect(P.getVusNumberId("124037")).toEqual(55);
     });
     test("...when input is '100097/182'", () => {
-      expect(P.getVusNumberId('100097/182')).toEqual(50);
+      expect(P.getVusNumberId("100097/182")).toEqual(50);
     });
     test("...when input is '123456'", () => {
-      expect(P.getVusNumberId('123456')).toEqual(null);
+      expect(P.getVusNumberId("123456")).toEqual(null);
     });
   });
 
   describe("isValid method testing...", () => {
     test("...when input is valid personData object", () => {
-      expect(P.isValid({ positionNameId: 36, vusNumberId: 50, rangeId: 4, tariffCategory: 7 })).toEqual(true);
+      expect(
+        P.isValid({
+          positionNameId: 36,
+          vusNumberId: 50,
+          rangeId: 4,
+          tariffCategory: 7,
+        })
+      ).toEqual(true);
     });
     test("...when input don't have positionNameId property", () => {
-      expect(P.isValid({ vusNumberId: 50, rangeId: 4, tariffCategory: 7 })).toEqual(false);
+      expect(
+        P.isValid({ vusNumberId: 50, rangeId: 4, tariffCategory: 7 })
+      ).toEqual(false);
     });
     test("...when input don't have vusNumberId property", () => {
-      expect(P.isValid({ positionNameId: 36, rangeId: 4, tariffCategory: 7 })).toEqual(false);
+      expect(
+        P.isValid({ positionNameId: 36, rangeId: 4, tariffCategory: 7 })
+      ).toEqual(false);
     });
     test("...when input don't have rangeId property", () => {
-      expect(P.isValid({ positionNameId: 36, vusNumberId: 50, tariffCategory: 7 })).toEqual(false);
+      expect(
+        P.isValid({ positionNameId: 36, vusNumberId: 50, tariffCategory: 7 })
+      ).toEqual(false);
     });
     test("...when input don't have tariffCategory property", () => {
-      expect(P.isValid({ positionNameId: 36, vusNumberId: 50, rangeId: 4 })).toEqual(false);
+      expect(
+        P.isValid({ positionNameId: 36, vusNumberId: 50, rangeId: 4 })
+      ).toEqual(false);
     });
     test("...when input is empty object", () => {
       expect(P.isValid({})).toEqual(false);
@@ -59,7 +76,12 @@ describe("Positions module testing...\n", () => {
   });
 
   describe("addPositionData method testing...", () => {
-    const pd = { positionNameId: 36, vusNumberId: 50, rangeId: 4, tariffCategory: 7 };
+    const pd = {
+      positionNameId: 36,
+      vusNumberId: 50,
+      rangeId: 4,
+      tariffCategory: 7,
+    };
     test("...when personData object is not valid", () => {
       expect(P.addPositionData({})).toEqual(undefined);
     });
@@ -72,12 +94,17 @@ describe("Positions module testing...\n", () => {
   });
 
   describe("findPositionData method testing...", () => {
-    const pd = { positionNameId: 36, vusNumberId: 50, rangeId: 4, tariffCategory: 7 };
+    const pd = {
+      positionNameId: 36,
+      vusNumberId: 50,
+      rangeId: 4,
+      tariffCategory: 7,
+    };
     test("...when personData object is not valid", () => {
       expect(P.findPositionData({})).toEqual(undefined);
     });
     test("...when no personData object in person-data source", () => {
-      expect(P.findPositionData({ ...pd, rangeId: 7})).toEqual(undefined);
+      expect(P.findPositionData({ ...pd, rangeId: 7 })).toEqual(undefined);
     });
     test("...when personData object is in person-data source", () => {
       expect(P.findPositionData(pd)).toEqual({ id: 1, ...pd });
@@ -85,7 +112,12 @@ describe("Positions module testing...\n", () => {
   });
 
   describe("getPositionData method testing...", () => {
-    const pd = { positionNameId: 36, vusNumberId: 50, rangeId: 4, tariffCategory: 7 };
+    const pd = {
+      positionNameId: 36,
+      vusNumberId: 50,
+      rangeId: 4,
+      tariffCategory: 7,
+    };
     test("...when no position-data element with id equals to positionId", () => {
       expect(P.getPositionData(12)).toEqual(undefined);
     });
@@ -102,16 +134,24 @@ describe("Positions module testing...\n", () => {
       expect(P.getPosition(0)).toEqual(null);
     });
     test("...when position name case not defined", () => {
-      expect(P.getPosition(1)).toEqual('заместитель командира взвода - командир отделения');
+      expect(P.getPosition(1)).toEqual(
+        "заместитель командира взвода - командир отделения"
+      );
     });
     test("...when position name case is nominative", () => {
-      expect(P.getPosition(1, 'nominative')).toEqual('заместитель командира взвода - командир отделения');
+      expect(P.getPosition(1, "nominative")).toEqual(
+        "заместитель командира взвода - командир отделения"
+      );
     });
     test("...when position name case is dative", () => {
-      expect(P.getPosition(1, 'dative')).toEqual('заместителю командира взвода - командиру отделения');
+      expect(P.getPosition(1, "dative")).toEqual(
+        "заместителю командира взвода - командиру отделения"
+      );
     });
     test("...when position name case is genitive", () => {
-      expect(P.getPosition(1, 'genitive')).toEqual('заместителя командира взвода - командира отделения');
+      expect(P.getPosition(1, "genitive")).toEqual(
+        "заместителя командира взвода - командира отделения"
+      );
     });
   });
 
@@ -120,7 +160,7 @@ describe("Positions module testing...\n", () => {
       expect(P.getVusNumber(0)).toEqual(null);
     });
     test("...when position-data element with id equals to positionId exists", () => {
-      expect(P.getVusNumber(1)).toEqual('100097/182');
+      expect(P.getVusNumber(1)).toEqual("100097/182");
     });
   });
 
@@ -138,7 +178,7 @@ describe("Positions module testing...\n", () => {
       expect(P.getStatePositionCategory(0)).toEqual(null);
     });
     test("...when position-data element with id equals to positionId exists", () => {
-      expect(P.getStatePositionCategory(1)).toEqual('сержант');
+      expect(P.getStatePositionCategory(1)).toEqual("сержант");
     });
   });
 

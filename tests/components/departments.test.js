@@ -1,6 +1,6 @@
-const Department = require('../../components/departments.js');
-const Dispatcher = require('../../dispatcher.js');
-const Position = require('../../components/positions.js');
+const Department = require("../../components/departments.js");
+const Dispatcher = require("../../dispatcher.js");
+const Position = require("../../components/positions.js");
 
 const D = new Department(new Dispatcher());
 const d1 = { departmentNameId: 62, number: 1, start: 10 };
@@ -12,19 +12,25 @@ describe("Departments module testing...\n", () => {
       expect(D.getDepartmentName(0)).toEqual(null);
     });
     test("...when input is 59", () => {
-      expect(D.getDepartmentName(59)).toEqual('мотострелковая рота');
+      expect(D.getDepartmentName(59)).toEqual("мотострелковая рота");
     });
     test("...when input is 62", () => {
-      expect(D.getDepartmentName(62)).toEqual('мотострелковый батальон');
+      expect(D.getDepartmentName(62)).toEqual("мотострелковый батальон");
     });
     test("...when input is 62", () => {
-      expect(D.getDepartmentName(62, 'nominative')).toEqual('мотострелковый батальон');
+      expect(D.getDepartmentName(62, "nominative")).toEqual(
+        "мотострелковый батальон"
+      );
     });
     test("...when input is 62", () => {
-      expect(D.getDepartmentName(62, 'dative')).toEqual('мотострелковому батальону');
+      expect(D.getDepartmentName(62, "dative")).toEqual(
+        "мотострелковому батальону"
+      );
     });
     test("...when input is 62", () => {
-      expect(D.getDepartmentName(62, 'genitive')).toEqual('мотострелкового батальона');
+      expect(D.getDepartmentName(62, "genitive")).toEqual(
+        "мотострелкового батальона"
+      );
     });
   });
 
@@ -33,21 +39,21 @@ describe("Departments module testing...\n", () => {
       expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 1, item: 1, positionDataId: 1 },
-        range: { start: 10, end: 2958525 }
+        range: { start: 10, end: 2958525 },
       });
     });
     test("...when such position object has already added", () => {
       expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 2, item: 2, positionDataId: 1 },
-        range: { start: 10, end: 2958525 }
+        range: { start: 10, end: 2958525 },
       });
     });
     test("...when two such position objects has already added", () => {
       expect(D.addPositionToState(p1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 3, item: 3, positionDataId: 1 },
-        range: { start: 10, end: 2958525 }
+        range: { start: 10, end: 2958525 },
       });
     });
   });
@@ -57,7 +63,7 @@ describe("Departments module testing...\n", () => {
       expect(D.addDepartmentToState(d1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 1, item: 4, number: 1, departmentNameId: 62 },
-        range: { start: 10, end: 2958525 }
+        range: { start: 10, end: 2958525 },
       });
     });
     test("...when department with no start", () => {
@@ -67,14 +73,14 @@ describe("Departments module testing...\n", () => {
       expect(D.addDepartmentToState(d1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 2, item: 5, number: 1, departmentNameId: 62 },
-        range: { start: 10, end: 2958525 }
+        range: { start: 10, end: 2958525 },
       });
     });
     test("...when two such department objects has already added", () => {
       expect(D.addDepartmentToState(d1)).toEqual({
         relevant: { departmentId: null },
         data: { id: 3, item: 6, number: 1, departmentNameId: 62 },
-        range: { start: 10, end: 2958525 }
+        range: { start: 10, end: 2958525 },
       });
     });
   });
@@ -85,33 +91,33 @@ describe("Departments module testing...\n", () => {
         {
           relevant: { departmentId: null },
           data: { id: 1, item: 1, positionDataId: 1 },
-          range: { start: 10, end: 2958525 }
+          range: { start: 10, end: 2958525 },
         },
         {
           relevant: { departmentId: null },
           data: { id: 2, item: 2, positionDataId: 1 },
-          range: { start: 10, end: 2958525 }
+          range: { start: 10, end: 2958525 },
         },
         {
           relevant: { departmentId: null },
           data: { id: 3, item: 3, positionDataId: 1 },
-          range: { start: 10, end: 2958525 }
+          range: { start: 10, end: 2958525 },
         },
         {
           relevant: { departmentId: null },
           data: { id: 1, item: 4, number: 1, departmentNameId: 62 },
-          range: { start: 10, end: 2958525 }
+          range: { start: 10, end: 2958525 },
         },
         {
           relevant: { departmentId: null },
           data: { id: 2, item: 5, number: 1, departmentNameId: 62 },
-          range: { start: 10, end: 2958525 }
+          range: { start: 10, end: 2958525 },
         },
         {
           relevant: { departmentId: null },
           data: { id: 3, item: 6, number: 1, departmentNameId: 62 },
-          range: { start: 10, end: 2958525 }
-        }
+          range: { start: 10, end: 2958525 },
+        },
       ];
       expect(D.getStateElementsOf(null)).toEqual(result);
     });
@@ -133,22 +139,24 @@ describe("Departments module testing...\n", () => {
 
   describe("getDepartmentId method testing...", () => {
     test("...when input is 'мотострелковый батальон'", () => {
-      expect(D.getDepartmentId('мотострелковый батальон')).toEqual(62);
+      expect(D.getDepartmentId("мотострелковый батальон")).toEqual(62);
     });
     test("...when input is 'мотострелковая рота'", () => {
-      expect(D.getDepartmentId('мотострелковая рота')).toEqual(59);
+      expect(D.getDepartmentId("мотострелковая рота")).toEqual(59);
     });
     test("...when input is not valid", () => {
-      expect(D.getDepartmentId('нет такого названия подразделения')).toEqual(null);
+      expect(D.getDepartmentId("нет такого названия подразделения")).toEqual(
+        null
+      );
     });
   });
 
   describe("getDepartment method testing...", () => {
     test("...when input is null", () => {
-      expect(D.getDepartment(null)).toEqual('');
+      expect(D.getDepartment(null)).toEqual("");
     });
     test("...when input is 1", () => {
-      expect(D.getDepartment(1)).toEqual('1 мотострелкового батальона');
+      expect(D.getDepartment(1)).toEqual("1 мотострелкового батальона");
     });
   });
 
@@ -162,16 +170,20 @@ describe("Departments module testing...\n", () => {
         positionNameId: 1,
         vusNumberId: 2,
         tariffCategory: 2,
-        rangeId: 2
+        rangeId: 2,
       });
-      expect(D.getPositionFullname(1)).toEqual('водитель');
+      expect(D.getPositionFullname(1)).toEqual("водитель");
     });
     test("...when input is 5 for department with id equals 1", () => {
       D.addPositionToState({ ...p1, superDepartmentId: 1 });
-      expect(D.getPositionFullname(5)).toEqual('водитель 1 мотострелкового батальона');
+      expect(D.getPositionFullname(5)).toEqual(
+        "водитель 1 мотострелкового батальона"
+      );
     });
     test("...when input is 5 and set dative case for department with id equals 1", () => {
-      expect(D.getPositionFullname(5, 'dative')).toEqual('водителю 1 мотострелкового батальона');
+      expect(D.getPositionFullname(5, "dative")).toEqual(
+        "водителю 1 мотострелкового батальона"
+      );
     });
   });
 });
