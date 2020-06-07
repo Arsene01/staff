@@ -14,7 +14,6 @@ module.exports = class DataSource {
     return this._state;
   }
   clear() {
-    this._state = null;
     this._state = [];
   }
   save() {
