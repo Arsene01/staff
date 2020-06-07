@@ -1,5 +1,5 @@
-const DataSource = require('./components/data-source.js');
-const { toNumber, toDateString } = require('./components/date-transform.js');
+const DataSource = require("./components/data-source.js");
+const { toNumber, toDateString } = require("./components/date-transform.js");
 
 module.exports = class Dispatcher {
   constructor() {
@@ -8,44 +8,44 @@ module.exports = class Dispatcher {
   }
   initialize() {
     [
-      'address-data',
-      'areas',
-      'cities',
-      'department-names',
-      'department-service-types',
-      'departments',
-      'entities',
-      'firstname-endings',
-      'firstnames',
-      'institutions',
-      'institution-data',
-      'institution-names',
-      'institution-types',
-      'lastname-endings',
-      'lastnames',
-      'localities',
-      'middlename-endings',
-      'middlenames',
-      'personal-numbers',
-      'person-data',
-      'person-ranges',
-      'persons',
-      'position-data',
-      'position-names',
-      'position-salaries',
-      'position-service',
-      'positions',
-      'ranges',
-      'range-salaries',
-      'registrations',
-      'regions',
-      'service',
-      'streets',
-      'vus-numbers'
-    ].map(dataSourceName => this.createDataSource(dataSourceName));
+      "address-data",
+      "areas",
+      "cities",
+      "department-names",
+      "department-service-types",
+      "departments",
+      "entities",
+      "firstname-endings",
+      "firstnames",
+      "institutions",
+      "institution-data",
+      "institution-names",
+      "institution-types",
+      "lastname-endings",
+      "lastnames",
+      "localities",
+      "middlename-endings",
+      "middlenames",
+      "personal-numbers",
+      "person-data",
+      "person-ranges",
+      "persons",
+      "position-data",
+      "position-names",
+      "position-salaries",
+      "position-service",
+      "positions",
+      "ranges",
+      "range-salaries",
+      "registrations",
+      "regions",
+      "service",
+      "streets",
+      "vus-numbers",
+    ].map((dataSourceName) => this.createDataSource(dataSourceName));
   }
   getDataSource(name) {
-    const source = this.dataSources.find(source => source.name === name);
+    const source = this.dataSources.find((source) => source.name === name);
     return source ? source : null;
   }
   stateOf(name) {
@@ -55,11 +55,14 @@ module.exports = class Dispatcher {
   createDataSource(name) {
     const source = this.getDataSource(name);
     if (source) return source;
-    this.dataSources.push({ name, source: new DataSource(`${__dirname}\\tdata\\${name}.txt`) });
+    this.dataSources.push({
+      name,
+      source: new DataSource(`${__dirname}\\tdata\\${name}.txt`),
+    });
     return this.dataSources[this.dataSources.length - 1];
   }
   add(record, dataSourceName, isSwallow) {
-    if(!this.getDataSource(dataSourceName)) return;
+    if (!this.getDataSource(dataSourceName)) return;
     this.getDataSource(dataSourceName).source.add(record, isSwallow);
   }
   filterInSource(config, dataSourceName) {
@@ -72,9 +75,8 @@ module.exports = class Dispatcher {
     return this.getDataSource(dataSourceName).source.findIndex(config);
   }
 
-
-//it is possible below methods not required for this module
-/*
+  //it is possible below methods not required for this module
+  /*
   getMessage(message) {
     if (message.indexOf('quit') >=0) process.exit(1);
     if (message.indexOf('create entity') >= 0) return `Entity #${this.createEntity()} has been created!\n`;
@@ -102,4 +104,4 @@ module.exports = class Dispatcher {
     }
     return 'No eligable commands selected. Print your command:\n';
   }*/
-}
+};
