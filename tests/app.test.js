@@ -1080,7 +1080,7 @@ describe("Application working...", () => {
       });
 
     });
-    describe("concatenating range, fullname, position", () => {
+    describe("setting persons to their positions", () => {
       test("when input has no date and case", () => {
         let i = 1; while (i <= 18) { ps.applyPosition(i, i, toNumber('26.12.2016')); i += 1; }
         expect(P.getRangeFullnamePosition(1)).toEqual('подполковник Кабиев Тлектес Серикович, командир батальона 1 мотострелкового батальона войсковой части 16544');
@@ -1138,4 +1138,5 @@ describe("Application working...", () => {
       });
     });
   });
+  describe("Checking persons' right for allowances", () => {});
 });
