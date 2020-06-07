@@ -3,30 +3,30 @@ module.exports = class Address {
     this.dispatcher = dispatcher;
     this.registration = registration;
   }
-  get region() {
+  addressSourceName(element) {
+    return element[element.length - 1] !== "y"
+      ? element + "s"
+      : element.substring(0, element.length - 1) + "ies";
+  }
+  getAddressElement(element) {
     return this.dispatcher
-      .stateOf("regions")
-      .find((r) => r.id === this.registration.regionId);
+      .stateOf(this.addressSourceName(element))
+      .find((e) => e.id === this.registration[`${element}Id`]);
+  }
+  get region() {
+    return this.getAddressElement("region");
   }
   get area() {
-    return this.dispatcher
-      .stateOf("areas")
-      .find((a) => a.id === this.registration.areaId);
+    return this.getAddressElement("area");
   }
   get city() {
-    return this.dispatcher
-      .stateOf("cities")
-      .find((c) => c.id === this.registration.cityId);
+    return this.getAddressElement("city");
   }
   get locality() {
-    return this.dispatcher
-      .stateOf("localities")
-      .find((l) => l.id === this.registration.localityId);
+    return this.getAddressElement("locality");
   }
   get street() {
-    return this.dispatcher
-      .stateOf("streets")
-      .find((s) => s.id === this.registration.streetId);
+    return this.getAddressElement("street");
   }
   get house() {
     if (!this.registration.house) return null;
