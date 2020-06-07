@@ -1,36 +1,31 @@
 module.exports = class Address {
-  constructor(registration, dispatcher) {
-    this.registration = registration;
+  constructor(dispatcher, registration = {}) {
     this.dispatcher = dispatcher;
+    this.registration = registration;
   }
   get region() {
-    return this
-      .dispatcher
-      .stateOf('regions')
+    return this.dispatcher
+      .stateOf("regions")
       .find((r) => r.id === this.registration.regionId);
   }
   get area() {
-    return this
-      .dispatcher
-      .stateOf('areas')
+    return this.dispatcher
+      .stateOf("areas")
       .find((a) => a.id === this.registration.areaId);
   }
   get city() {
-    return this
-      .dispatcher
-      .stateOf('cities')
+    return this.dispatcher
+      .stateOf("cities")
       .find((c) => c.id === this.registration.cityId);
   }
   get locality() {
-    return this
-      .dispatcher
-      .stateOf('localities')
+    return this.dispatcher
+      .stateOf("localities")
       .find((l) => l.id === this.registration.localityId);
   }
   get street() {
-    return this
-      .dispatcher
-      .stateOf('streets')
+    return this.dispatcher
+      .stateOf("streets")
       .find((s) => s.id === this.registration.streetId);
   }
   get house() {
@@ -59,42 +54,63 @@ module.exports = class Address {
       this.street ? this.street.name : null,
       this.house,
       this.building,
-      this.apartment
-    ].filter((e) => e ? true : false).join(', ');
+      this.apartment,
+    ]
+      .filter((e) => (e ? true : false))
+      .join(", ");
   }
   regionId(region) {
-    const result = this.dispatcher.stateOf('regions').find((r) => r.name === region);
+    const result = this.dispatcher
+      .stateOf("regions")
+      .find((r) => r.name === region);
     return result ? result.id : null;
   }
   areaId(area) {
-    const result = this.dispatcher.stateOf('areas').find((a) => a.name === area);
+    const result = this.dispatcher
+      .stateOf("areas")
+      .find((a) => a.name === area);
     return result ? result.id : null;
   }
   cityId(city) {
-    const result = this.dispatcher.stateOf('cities').find((c) => c.name === city);
+    const result = this.dispatcher
+      .stateOf("cities")
+      .find((c) => c.name === city);
     return result ? result.id : null;
   }
   localityId(locality) {
-    const result = this.dispatcher.stateOf('localities').find((l) => l.name === locality);
+    const result = this.dispatcher
+      .stateOf("localities")
+      .find((l) => l.name === locality);
     return result ? result.id : null;
   }
   streetId(street) {
-    const result = this.dispatcher.stateOf('streets').find((s) => s.name === street);
+    const result = this.dispatcher
+      .stateOf("streets")
+      .find((s) => s.name === street);
     return result ? result.id : null;
   }
-  registerAddress(
-    { zipcode, region, area, city, locality, street, house, building, apartment }
-  ) {
+  registerAddress({
+    zipcode,
+    region,
+    area,
+    city,
+    locality,
+    street,
+    house,
+    building,
+    apartment,
+  }) {
     if (!zipcode) return null;
     if (!this.regionId(region)) return null;
     const result = { zipcode, regionId: this.regionId(region) };
     if (this.areaId(area)) result.areaId = this.areaId(area);
     if (this.cityId(city)) result.cityId = this.cityId(city);
-    if (this.localityId(locality)) result.localityId = this.localityId(locality);
+    if (this.localityId(locality))
+      result.localityId = this.localityId(locality);
     if (this.streetId(street)) result.streetId = this.streetId(street);
     if (house) result.house = house;
     if (building) result.building = building;
     if (apartment) result.apartment = apartment;
     return result;
   }
-}
+};

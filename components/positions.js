@@ -1,52 +1,53 @@
-const { getCase } = require('./cases.js');
+const { getCase } = require("./cases.js");
 
 module.exports = class Position {
   constructor(dispatcher) {
     this.dispatcher = dispatcher;
   }
   getPositionData(positionDataId) {
-    return this.dispatcher.stateOf('position-data').find((p) => p.id === positionDataId);
+    return this.dispatcher
+      .stateOf("position-data")
+      .find((p) => p.id === positionDataId);
   }
   getPosition(positionDataId, inCase) {
     const data = this.getPositionData(positionDataId);
-    return !data ? null : (
-      this
-        .dispatcher
-        .findInSource({ id: data.positionNameId }, 'position-names')[getCase(inCase)]
-    );
+    return !data
+      ? null
+      : this.dispatcher.findInSource(
+          { id: data.positionNameId },
+          "position-names"
+        )[getCase(inCase)];
   }
   getPositionNameId(positionName) {
-    const result = this
-      .dispatcher
-      .findInSource({ nominative: positionName }, 'position-names');
+    const result = this.dispatcher.findInSource(
+      { nominative: positionName },
+      "position-names"
+    );
     return result ? result.id : null;
   }
   getVusNumber(positionDataId) {
     const data = this.getPositionData(positionDataId);
-    return (!data) ? null : (
-      this
-        .dispatcher
-        .findInSource({ id: data.vusNumberId }, 'vus-numbers')
-        .name
-    );
+    return !data
+      ? null
+      : this.dispatcher.findInSource({ id: data.vusNumberId }, "vus-numbers")
+          .name;
   }
   getVusNumberId(vusNumber) {
-    const result = this
-      .dispatcher
-      .findInSource({ name: vusNumber }, 'vus-numbers');
+    const result = this.dispatcher.findInSource(
+      { name: vusNumber },
+      "vus-numbers"
+    );
     return result ? result.id : null;
   }
   getTariffCategory(positionDataId) {
     const data = this.getPositionData(positionDataId);
-    return (!data) ? null : data.tariffCategory;
+    return !data ? null : data.tariffCategory;
   }
   getStatePositionCategory(positionDataId) {
     const data = this.getPositionData(positionDataId);
-    return (!data) ? null : (
-      this
-        .dispatcher
-        .findInSource({ id: data.rangeId }, 'ranges')[getCase()]
-    );
+    return !data
+      ? null
+      : this.dispatcher.findInSource({ id: data.rangeId }, "ranges")[getCase()];
   }
   isValid(positionData) {
     if (!positionData) return false;
@@ -58,14 +59,14 @@ module.exports = class Position {
   }
   findPositionData(positionData) {
     if (!this.isValid(positionData)) return;
-    return this.dispatcher.findInSource(positionData, 'position-data');
+    return this.dispatcher.findInSource(positionData, "position-data");
   }
   addPositionData(positionData) {
     if (!this.isValid(positionData)) return;
     const pd = this.findPositionData(positionData);
     if (pd) return pd;
-    const id = this.dispatcher.stateOf('position-data').length + 1;
-    this.dispatcher.add({ ...positionData, id }, 'position-data');
+    const id = this.dispatcher.stateOf("position-data").length + 1;
+    this.dispatcher.add({ ...positionData, id }, "position-data");
     return this.findPositionData(positionData);
   }
-}
+};

@@ -7,9 +7,15 @@ class Node {
   isIndexed() {
     return this.index !== undefined;
   }
-  getChildren() { return this.children; }
-  getData() { return this.data; }
-  setIndex(index) { this.index = index; }
+  getChildren() {
+    return this.children;
+  }
+  getData() {
+    return this.data;
+  }
+  setIndex(index) {
+    this.index = index;
+  }
 }
 
 class Searcher {
@@ -17,15 +23,17 @@ class Searcher {
     this.source = [];
     this.root = new Node(null, null);
     this.collection = [];
-    source.map(el => this.add(el));
+    source.map((el) => this.add(el));
   }
   add(datastring) {
-    const data = datastring.split('');
+    const data = datastring.split("");
     let currentNode = this.root;
     while (data.length) {
       const children = currentNode.getChildren();
       const firstElement = data.shift();
-      const index = children.findIndex(node => node.getData() === firstElement);
+      const index = children.findIndex(
+        (node) => node.getData() === firstElement
+      );
       if (index >= 0) {
         currentNode = children[index];
         continue;
@@ -40,17 +48,19 @@ class Searcher {
     }
   }
   find(data) {
-    const datas = data.split('');
+    const datas = data.split("");
     let currentNode = this.root;
     while (datas.length) {
       const children = currentNode.getChildren();
-      const index = children.findIndex(node => node.getData() === datas[0]);
+      const index = children.findIndex((node) => node.getData() === datas[0]);
       if (index < 0) break;
       currentNode = children[index];
       datas.shift();
     }
     if (currentNode.index === undefined) return null;
-    return this.getDataById(currentNode.index) === data ? currentNode.index : null;
+    return this.getDataById(currentNode.index) === data
+      ? currentNode.index
+      : null;
   }
   getDataById(id) {
     let currentNode = this.collection[id];
@@ -59,11 +69,11 @@ class Searcher {
       datas.unshift(currentNode.getData());
       currentNode = currentNode.parent;
     } while (currentNode !== this.root);
-    return datas.join('');
+    return datas.join("");
   }
   getDataByIdFromSource(id) {
     return this.source[id];
   }
 }
-const createSearcher = source => new Searcher(source);
+const createSearcher = (source) => new Searcher(source);
 exports.createSearcher = createSearcher;
