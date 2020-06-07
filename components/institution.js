@@ -1,5 +1,6 @@
 const Address = require("./address.js");
 const { toNumber, toDateString, today } = require("./date-transform.js");
+const { isWithin, casesList } = require("./utils.js");
 const { getCase } = require("./cases.js");
 
 module.exports = class Institution {
@@ -8,16 +9,11 @@ module.exports = class Institution {
     this.clear();
   }
   clear() {
-    this.institution = null;
     this.institution = {};
   }
   setPropertyToInstitution(property, value) {
     if (this.institution[property]) return this;
-    if (
-      ["nominative", "dative", "genitive", "accusative"].every((c) =>
-        value[c] ? true : false
-      )
-    ) {
+    if (casesList().every((c) => (value[c] ? true : false))) {
       this.institution[property] = value;
     }
     return this;
@@ -41,7 +37,7 @@ module.exports = class Institution {
     if (!id || typeof id !== "number" || typeof date !== "number") return;
     return this.dispatcher
       .filterInSource({ relevant: { institutionId: id } }, "institution-data")
-      .find((r) => this.isWithin(r, date));
+      .find((r) => isWithin(r, date));
   }
   getName(institutionId, date = toNumber(today()), toCase) {
     if (!this.getData(institutionId, date)) return;
@@ -116,7 +112,7 @@ module.exports = class Institution {
   getAddress(institutionId, date = toNumber(today())) {
     const data = this.dispatcher
       .filterInSource({ relevant: { institutionId } }, "address-data")
-      .find((r) => this.isWithin(r, date));
+      .find((r) => isWithin(r, date));
     if (!data) return "";
     return new Address(this.dispatcher, { ...data.data }).address;
   }
