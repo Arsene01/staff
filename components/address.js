@@ -1,93 +1,66 @@
 module.exports = class Address {
-  constructor(dispatcher, registration = {}) {
+  constructor(dispatcher) {
     this.dispatcher = dispatcher;
-    this.registration = registration;
   }
   addressSourceName(element) {
     return element[element.length - 1] !== "y"
       ? element + "s"
       : element.substring(0, element.length - 1) + "ies";
   }
-  getAddressElement(element) {
+  getAddressElement(type, id) {
     return this.dispatcher
-      .stateOf(this.addressSourceName(element))
-      .find((e) => e.id === this.registration[`${element}Id`]);
+      .stateOf(this.addressSourceName(type))
+      .find((e) => e.id === id);
   }
-  get region() {
-    return this.getAddressElement("region");
+  getNameById(property, id) {
+    const result = this.getAddressElement(property, id);
+    return result ? result.name : null;
   }
-  get area() {
-    return this.getAddressElement("area");
-  }
-  get city() {
-    return this.getAddressElement("city");
-  }
-  get locality() {
-    return this.getAddressElement("locality");
-  }
-  get street() {
-    return this.getAddressElement("street");
-  }
-  get house() {
-    if (!this.registration.house) return null;
-    return `д. ${this.registration.house}`;
-  }
-  get building() {
-    if (!this.registration) return null;
-    if (!this.registration.building) return null;
-    return `корп. ${this.registration.building}`;
-  }
-  get apartment() {
-    if (!this.registration.apartment) return null;
-    return `кв. ${this.registration.apartment}`;
-  }
-  get zipcode() {
-    return this.registration.zipcode ? this.registration.zipcode : null;
-  }
-  get address() {
+  getAddress({
+    zipcode,
+    regionId,
+    areaId,
+    cityId,
+    localityId,
+    streetId,
+    house,
+    building,
+    apartment,
+  }) {
     return [
-      this.zipcode,
-      this.region ? this.region.name : null,
-      this.area ? this.area.name : null,
-      this.city ? this.city.name : null,
-      this.locality ? this.locality.name : null,
-      this.street ? this.street.name : null,
-      this.house,
-      this.building,
-      this.apartment,
+      zipcode,
+      this.getNameById("region", regionId),
+      areaId ? this.getNameById("area", areaId) : null,
+      cityId ? this.getNameById("city", cityId) : null,
+      localityId ? this.getNameById("locality", localityId) : null,
+      streetId ? this.getNameById("street", streetId) : null,
+      house ? "д. " + house : null,
+      building ? "корп. " + building : null,
+      apartment ? "кв. " + apartment : null,
     ]
       .filter((e) => (e ? true : false))
       .join(", ");
   }
-  regionId(region) {
+  getElementId(property, value) {
     const result = this.dispatcher
-      .stateOf("regions")
-      .find((r) => r.name === region);
+      .stateOf(this.addressSourceName(property))
+      .find((r) => r.name === value);
     return result ? result.id : null;
+  }
+  regionId(region) {
+    return this.getElementId("region", region);
   }
   areaId(area) {
-    const result = this.dispatcher
-      .stateOf("areas")
-      .find((a) => a.name === area);
-    return result ? result.id : null;
+    return this.getElementId("area", area);
   }
   cityId(city) {
-    const result = this.dispatcher
-      .stateOf("cities")
-      .find((c) => c.name === city);
-    return result ? result.id : null;
+    return this.getElementId("city", city);
   }
   localityId(locality) {
-    const result = this.dispatcher
-      .stateOf("localities")
-      .find((l) => l.name === locality);
-    return result ? result.id : null;
+    return this.getElementId("locality", locality);
   }
   streetId(street) {
-    const result = this.dispatcher
-      .stateOf("streets")
-      .find((s) => s.name === street);
-    return result ? result.id : null;
+    return this.getElementId("street", street);
   }
   registerAddress({
     zipcode,
@@ -100,8 +73,7 @@ module.exports = class Address {
     building,
     apartment,
   }) {
-    if (!zipcode) return null;
-    if (!this.regionId(region)) return null;
+    if (!zipcode || !this.regionId(region)) return null;
     const result = { zipcode, regionId: this.regionId(region) };
     if (this.areaId(area)) result.areaId = this.areaId(area);
     if (this.cityId(city)) result.cityId = this.cityId(city);
