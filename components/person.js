@@ -10,11 +10,7 @@ module.exports = class Person {
     this.clear();
   }
   clear() {
-    this.person = null;
     this.person = {};
-  }
-  isWithin(record, date) {
-    return record.range.start <= date && date <= record.range.end;
   }
   isInputValid(personId, date) {
     if (!personId || typeof personId !== "number") return false;
