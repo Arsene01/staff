@@ -9,14 +9,13 @@ module.exports = class Position {
       .stateOf("position-data")
       .find((p) => p.id === positionDataId);
   }
-  getPosition(positionDataId, inCase) {
+  getPosition(positionDataId, toCase) {
     const data = this.getPositionData(positionDataId);
-    return !data
-      ? null
-      : this.dispatcher.findInSource(
-          { id: data.positionNameId },
-          "position-names"
-        )[getCase(inCase)];
+    if (!data) return null;
+    return this.dispatcher.findInSource(
+      { id: data.positionNameId },
+      "position-names"
+    )[getCase(toCase)];
   }
   getPositionNameId(positionName) {
     const result = this.dispatcher.findInSource(
@@ -27,10 +26,9 @@ module.exports = class Position {
   }
   getVusNumber(positionDataId) {
     const data = this.getPositionData(positionDataId);
-    return !data
-      ? null
-      : this.dispatcher.findInSource({ id: data.vusNumberId }, "vus-numbers")
-          .name;
+    if (!data) return null;
+    return this.dispatcher.findInSource({ id: data.vusNumberId }, "vus-numbers")
+      .name;
   }
   getVusNumberId(vusNumber) {
     const result = this.dispatcher.findInSource(
