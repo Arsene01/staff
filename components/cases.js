@@ -1,5 +1,10 @@
 exports.changeEnding = changeEnding;
 exports.getCase = getCase;
+exports.casesList = casesList;
+function casesList() {
+  return ["nominative", "dative", "genitive", "accusative"];
+}
+
 function changeEnding(element, endingSource, toCase) {
   const { end, length } = getEndingObject(element);
   const match = findMatch(endingSource, end);
@@ -10,9 +15,7 @@ function changeEnding(element, endingSource, toCase) {
 }
 
 function getCase(newCase) {
-  return ["nominative", "dative", "genitive", "accusative"].includes(newCase)
-    ? newCase
-    : "nominative";
+  return casesList().includes(newCase) ? newCase : "nominative";
 }
 function getEndingObject(element) {
   if (!element.length) return { end: "", length: 0 };
