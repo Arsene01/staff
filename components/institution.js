@@ -114,6 +114,6 @@ module.exports = class Institution {
       .filterInSource({ relevant: { institutionId } }, "address-data")
       .find((r) => isWithin(r, date));
     if (!data) return "";
-    return new Address(this.dispatcher, { ...data.data }).address;
+    return new Address(this.dispatcher).getAddress(data.data);
   }
 };
