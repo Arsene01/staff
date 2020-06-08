@@ -1,7 +1,7 @@
 const Address = require("./address.js");
 const { toNumber, toDateString, today } = require("./date-transform.js");
-const { isWithin, casesList } = require("./utils.js");
-const { getCase } = require("./cases.js");
+const { isWithin } = require("./utils.js");
+const { getCase, casesList } = require("./cases.js");
 
 module.exports = class Institution {
   constructor(dispatcher) {
