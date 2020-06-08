@@ -67,7 +67,8 @@ describe("Address class testing...", () => {
 
   describe("address getter testing", () => {
     test("when situation is 1", () => {
-      const address = new Address(new Dispatcher(), {
+      const a = new Address(new Dispatcher());
+      const result = a.getAddress({
         regionId: 4,
         cityId: 218,
         streetId: 152721,
@@ -75,22 +76,36 @@ describe("Address class testing...", () => {
         building: "е",
         apartment: 64,
       });
-      const result = address.address;
       expect(result).toEqual(
         "Республика Адыгея, Майкоп, Юннатов, д. 2, корп. е, кв. 64"
       );
     });
-    test("when situation is 1", () => {
-      const address = new Address(new Dispatcher(), {
+    test("when situation is 2", () => {
+      const a = new Address(new Dispatcher());
+      const result = a.getAddress({
         regionId: 24,
         areaId: 391,
         localityId: 8519,
         streetId: 83889,
         house: 9,
       });
-      const result = address.address;
       expect(result).toEqual(
         "Чеченская Республика, Наурский район, Калиновская, Маяковского, д. 9"
+      );
+    });
+    test("when situation is 3", () => {
+      const a = new Address(new Dispatcher());
+      const reg = {
+        regionId: 4,
+        cityId: 218,
+        streetId: 152721,
+        house: 2,
+        building: "е",
+        apartment: 64,
+      };
+      const result = a.getAddress(reg);
+      expect(result).toEqual(
+        "Республика Адыгея, Майкоп, Юннатов, д. 2, корп. е, кв. 64"
       );
     });
   });
