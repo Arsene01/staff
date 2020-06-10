@@ -80,17 +80,11 @@ module.exports = class Institution {
   }
   createInstitutionData(start = toNumber(today())) {
     this.dispatcher.add(
-      { id: this.dispatcher.stateOf("institutions").length + 1 },
-      "institutions"
-    );
-    this.dispatcher.add(
       {
-        relevant: {
-          institutionId: this.dispatcher.stateOf("institutions").length,
-        },
+        relevant: { institutionId: this.dispatcher.addAndGetId("institutions") },
         data: {
-          nameId: this.getIdOf(this.institution.name, "institution-names"),
-          typeId: this.getIdOf(this.institution.type, "institution-types"),
+          nameId: this.dispatcher.addAndGetId("institution-names", this.institution.name),
+          typeId: this.dispatcher.addAndGetId("institution-types", this.institution.type)
         },
         range: { start, end: 2958525 },
       },

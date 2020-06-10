@@ -17,13 +17,6 @@ module.exports = class Person {
     if (!date || typeof date !== "number") return false;
     return true;
   }
-  get id() {
-    return this.person ? this.person.id : null;
-  }
-  get birthdate() {
-    if (!this.person.birthdate) return null;
-    return toDateString(this.person.birthdate);
-  }
   getNamePart(part, personId, date, toCase) {
     const id = this.filterInSource(
       { relevant: { personId } },
@@ -100,18 +93,11 @@ module.exports = class Person {
   }
   registerPerson() {
     if (!this.isValid()) return;
-    const id = this.dispatcher.stateOf("persons").length + 1;
-    this.dispatcher.add({ id }, "persons");
+    const id = this.dispatcher.addAndGetId("persons");
     this.dispatcher.add(
       {
         relevant: { personId: id },
-        data: {
-          lastnameId: this.person.lastnameId,
-          firstnameId: this.person.firstnameId,
-          middlenameId: this.person.middlenameId,
-          birthdate: this.person.birthdate,
-          gender: this.person.gender,
-        },
+        data: { ...this.person },
         range: { start: this.person.birthdate, end: 2958525 },
       },
       "person-data"
@@ -139,7 +125,7 @@ module.exports = class Person {
     if (!personId || !rangeId || !start) return;
     this.dispatcher.getDataSource("person-ranges").source.fixRanges({
       relevant: { personId },
-      range: { start, end: 2958525 },
+      range: { start, end: 2958525 }
     });
     this.dispatcher.add(
       {
@@ -153,7 +139,7 @@ module.exports = class Person {
     if (!this.isInputValid(personId, date)) return;
     const result = this.dispatcher
       .filterInSource({ relevant: { personId } }, "person-ranges")
-      .find((r) => r.range.start <= date && date <= r.range.end);
+      .find((r) => isWithin(r, date));
     if (!result) return;
     return new RC(this.dispatcher).getRange(result.relevant.rangeId, toCase);
   }
@@ -161,7 +147,7 @@ module.exports = class Person {
     if (!this.isInputValid(personId, date)) return;
     const result = this.dispatcher
       .filterInSource({ relevant: { personId } }, "position-service")
-      .find((r) => r.range.start <= date && date <= r.range.end);
+      .find((r) => isWithin(r, date));
     if (!result) return;
     return new Department(this.dispatcher).getPositionFullname(
       result.relevant.positionId,

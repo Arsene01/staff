@@ -5,9 +5,7 @@ module.exports = class Position {
     this.dispatcher = dispatcher;
   }
   getPositionData(positionDataId) {
-    return this.dispatcher
-      .stateOf("position-data")
-      .find((p) => p.id === positionDataId);
+    return this.dispatcher.findInSource({ id: positionDataId }, "position-data");
   }
   getPosition(positionDataId, toCase) {
     const data = this.getPositionData(positionDataId);
@@ -63,8 +61,7 @@ module.exports = class Position {
     if (!this.isValid(positionData)) return;
     const pd = this.findPositionData(positionData);
     if (pd) return pd;
-    const id = this.dispatcher.stateOf("position-data").length + 1;
-    this.dispatcher.add({ ...positionData, id }, "position-data");
+    this.dispatcher.addAndGetId("position-data", positionData);
     return this.findPositionData(positionData);
   }
 };
