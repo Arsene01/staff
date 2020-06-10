@@ -65,6 +65,11 @@ module.exports = class Dispatcher {
     if (!this.getDataSource(dataSourceName)) return;
     this.getDataSource(dataSourceName).source.add(record, isSwallow);
   }
+  addAndGetId(dataSourceName, record = {}) {
+    const id = this.stateOf(dataSourceName).length + 1;
+    this.add({ ...record, id }, dataSourceName);
+    return id;
+  }
   filterInSource(config, dataSourceName) {
     return this.getDataSource(dataSourceName).source.filter(config);
   }
